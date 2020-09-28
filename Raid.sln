@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30503.244
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClanBossTurns", "ClanBossTurns\ClanBossTurns.csproj", "{72AB773E-0293-4027-8822-22FA4BDDAA70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaidLib", "RaidLib\RaidLib.csproj", "{613DACE3-548A-4392-B2DD-2A984B7FB95B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{72AB773E-0293-4027-8822-22FA4BDDAA70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72AB773E-0293-4027-8822-22FA4BDDAA70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72AB773E-0293-4027-8822-22FA4BDDAA70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72AB773E-0293-4027-8822-22FA4BDDAA70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{613DACE3-548A-4392-B2DD-2A984B7FB95B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{613DACE3-548A-4392-B2DD-2A984B7FB95B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{613DACE3-548A-4392-B2DD-2A984B7FB95B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{613DACE3-548A-4392-B2DD-2A984B7FB95B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B1BC66E7-2B2A-43DD-921A-19E5582830AB}
+	EndGlobalSection
+EndGlobal
