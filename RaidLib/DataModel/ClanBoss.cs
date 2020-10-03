@@ -34,9 +34,9 @@ namespace RaidLib.DataModel
             this.Speed = speed;
             this.Skills = new List<Skill>()
             {
-                new Skill("Crushing Force", Constants.SkillId.A1, 0, Constants.Effect.None, 0),
-                new Skill("Flesh Wither", Constants.SkillId.A2, 3, Constants.Effect.None, 0),
-                new Skill("Dark Nova", Constants.SkillId.A3, 3, Constants.Effect.None, 0)
+                new Skill("Crushing Force", Constants.SkillId.A1, 0, TurnAction.AttackAllEnemies()),
+                new Skill("Flesh Wither", Constants.SkillId.A2, 3, TurnAction.AttackAllEnemies()),
+                new Skill("Dark Nova", Constants.SkillId.A3, 3, new TurnAction(1, Constants.Target.OneEnemy, null, null, new List<DebuffToApply>() { new DebuffToApply(Constants.Debuff.Stun, 1, Constants.Target.OneEnemy) }))
             };
         }
 

@@ -30,12 +30,12 @@ namespace RaidLib.Simulator
             clock.OnTick += this.OnClockTick;
         }
 
-        public void ApplyBuff(Constants.Buff buff, int duration)
+        public void ApplyBuff(BuffToApply buff)
         {
 
         }
 
-        public void ApplyDebuff(Constants.Debuff debuff, int duration)
+        public void ApplyDebuff(DebuffToApply debuff)
         {
 
         }
@@ -44,13 +44,15 @@ namespace RaidLib.Simulator
 
         public float TurnMeterIncreaseOnClockTick { get; private set; }
 
-        public void TakeTurn()
+        public TurnAction TakeTurn()
         {
             int skill = this.turnCount % this.skills.Length;
             this.turnCount++;
             //Console.WriteLine("Clan Boss uses skill {0} ({1}) on turn {2} with turn meter {3}!", skills[skill].Id, skills[skill].Name, this.turnCount, this.TurnMeter);
             Console.WriteLine("Clan Boss Turn {0}: skill {1} ({2})", this.turnCount, skills[skill].Id, skills[skill].Name);
             this.TurnMeter = 0;
+
+            return this.skills[skill].TurnAction;
         }
 
         private void OnClockTick(object sender)

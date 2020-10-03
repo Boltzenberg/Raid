@@ -14,9 +14,21 @@ namespace ClanBossTurns
         static Tuple<Champion, List<SkillPolicy>> CreateManeater()
         {
             List<Skill> skills = new List<Skill>();
-            skills.Add(new Skill("Pummel", Constants.SkillId.A1, 0, Constants.Effect.None, 0));
-            skills.Add(new Skill("Syphon", Constants.SkillId.A2, 3, Constants.Effect.None, 0));
-            skills.Add(new Skill("Ancient Blood", Constants.SkillId.A3, 5, Constants.Effect.None, 0));
+            skills.Add(new Skill("Pummel", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()));
+            skills.Add(new Skill("Syphon", Constants.SkillId.A2, 3, TurnAction.AttackOneEnemy()));
+            skills.Add(new Skill(
+                "Ancient Blood", 
+                Constants.SkillId.A3, 
+                5, 
+                new TurnAction(
+                    0, 
+                    Constants.Target.None, 
+                    null, 
+                    new List<BuffToApply>() { 
+                        new BuffToApply(Constants.Buff.BlockDebuffs, 2, Constants.Target.FullTeam), 
+                        new BuffToApply(Constants.Buff.Unkillable, 2, Constants.Target.FullTeam) 
+                    }, 
+                null)));
 
             List<SkillPolicy> policies = new List<SkillPolicy>()
             {
@@ -31,9 +43,17 @@ namespace ClanBossTurns
         static Tuple<Champion, List<SkillPolicy>> CreatePainkeeper()
         {
             List<Skill> skills = new List<Skill>();
-            skills.Add(new Skill("Unflagging Advance", Constants.SkillId.A1, 0, Constants.Effect.FillSelfTurnMeterBy10Percent, 0));
-            skills.Add(new Skill("Spectacular Sweep", Constants.SkillId.A2, 4, Constants.Effect.None, 0));
-            skills.Add(new Skill("Combat Tactics", Constants.SkillId.A3, 4, Constants.Effect.AllyReduceCooldownBy1, 0));
+            skills.Add(new Skill(
+                "Unflagging Advance",
+                Constants.SkillId.A1,
+                0,
+                new TurnAction(1, Constants.Target.OneEnemy, new List<EffectToApply>() { new EffectToApply(Constants.Effect.FillTurnMeterBy10Percent, Constants.Target.Self) }, null, null)));
+            skills.Add(new Skill("Spectacular Sweep", Constants.SkillId.A2, 4, TurnAction.AttackOneEnemy()));
+            skills.Add(new Skill(
+                "Combat Tactics",
+                Constants.SkillId.A3,
+                4,
+                new TurnAction(0, Constants.Target.None, new List<EffectToApply>() { new EffectToApply(Constants.Effect.ReduceCooldownBy1, Constants.Target.AllAllies) }, null, null)));
 
             List<SkillPolicy> policies = new List<SkillPolicy>()
             {
@@ -48,9 +68,9 @@ namespace ClanBossTurns
         static Tuple<Champion, List<SkillPolicy>> CreateFrozenBanshee()
         {
             List<Skill> skills = new List<Skill>();
-            skills.Add(new Skill("Death's Caress", Constants.SkillId.A1, 0, Constants.Effect.None, 0));
-            skills.Add(new Skill("Cruel Exultation", Constants.SkillId.A2, 3, Constants.Effect.None, 0));
-            skills.Add(new Skill("Frost Blight", Constants.SkillId.A3, 3, Constants.Effect.None, 0));
+            skills.Add(new Skill("Death's Caress", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()));
+            skills.Add(new Skill("Cruel Exultation", Constants.SkillId.A2, 3, TurnAction.AttackOneEnemy()));
+            skills.Add(new Skill("Frost Blight", Constants.SkillId.A3, 3, TurnAction.AttackOneEnemy()));
 
             List<SkillPolicy> policies = new List<SkillPolicy>()
             {
@@ -64,9 +84,9 @@ namespace ClanBossTurns
         static Tuple<Champion, List<SkillPolicy>> CreateGravechillKiller()
         {
             List<Skill> skills = new List<Skill>();
-            skills.Add(new Skill("Freezing Toxin", Constants.SkillId.A1, 0, Constants.Effect.None, 0));
-            skills.Add(new Skill("Blood Chill", Constants.SkillId.A2, 3, Constants.Effect.None, 0));
-            skills.Add(new Skill("Icy Veins", Constants.SkillId.A3, 3, Constants.Effect.None, 0));
+            skills.Add(new Skill("Freezing Toxin", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()));
+            skills.Add(new Skill("Blood Chill", Constants.SkillId.A2, 3, TurnAction.AttackOneEnemy()));
+            skills.Add(new Skill("Icy Veins", Constants.SkillId.A3, 3, TurnAction.AttackOneEnemy()));
 
             List<SkillPolicy> policies = new List<SkillPolicy>()
             {
@@ -81,9 +101,9 @@ namespace ClanBossTurns
         static Tuple<Champion, List<SkillPolicy>> CreateBulwark()
         {
             List<Skill> skills = new List<Skill>();
-            skills.Add(new Skill("Hefty Flail", Constants.SkillId.A1, 0, Constants.Effect.None, 0));
-            skills.Add(new Skill("Meteoric Ignition", Constants.SkillId.A2, 3, Constants.Effect.None, 0));
-            skills.Add(new Skill("Punishing Defense", Constants.SkillId.P1, 0, Constants.Effect.None, 0));
+            skills.Add(new Skill("Hefty Flail", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()));
+            skills.Add(new Skill("Meteoric Ignition", Constants.SkillId.A2, 3, TurnAction.AttackOneEnemy()));
+            skills.Add(new Skill("Punishing Defense", Constants.SkillId.P1, 0, TurnAction.AttackOneEnemy()));
 
             List<SkillPolicy> policies = new List<SkillPolicy>()
             {

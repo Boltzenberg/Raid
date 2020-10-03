@@ -43,26 +43,61 @@ namespace RaidLib.Simulator
                     if (maxTMChamp.TurnMeter >= Constants.TurnMeter.Full)
                     {
                         //this.PrintTurnMeters();
-                        Constants.Effect effect = maxTMChamp.TakeTurn();
-                        if (Constants.Effects.ImpactsCurrentChamp.Contains(effect))
+                        TurnAction action = maxTMChamp.TakeTurn();
+                        if (action.BuffsToApply != null)
                         {
-                            maxTMChamp.ApplyEffect(effect);
-                        }
-                        else if (Constants.Effects.ImpactsAllies.Contains(effect))
-                        {
-                            foreach (ChampionInBattle cib in this.champions)
+                            foreach (BuffToApply buff in action.BuffsToApply)
                             {
-                                if (cib != maxTMChamp)
+                                if (buff.Target == Constants.Target.Self)
                                 {
-                                    cib.ApplyEffect(effect);
+                                    maxTMChamp.ApplyBuff(buff);
+                                }
+                                else if (buff.Target == Constants.Target.AllAllies)
+                                {
+                                    foreach (ChampionInBattle cib in this.champions)
+                                    {
+                                        if (cib != maxTMChamp)
+                                        {
+                                            cib.ApplyBuff(buff);
+                                        }
+                                    }
+                                }
+                                else if (buff.Target == Constants.Target.FullTeam)
+                                {
+                                    foreach (ChampionInBattle cib in this.champions)
+                                    {
+                                        cib.ApplyBuff(buff);
+                                    }
                                 }
                             }
                         }
-                        else if (Constants.Effects.ImpactsTeam.Contains(effect))
+
+                        if (action.DebuffsToApply != null)
                         {
-                            foreach (ChampionInBattle cib in this.champions)
+                            foreach (DebuffToApply debuff in action.DebuffsToApply)
                             {
-                                cib.ApplyEffect(effect);
+                                clanBoss.ApplyDebuff(debuff);
+                            }
+                        }
+
+                        if (action.EffectsToApply != null)
+                        {
+                            foreach (EffectToApply effect in action.EffectsToApply)
+                            {
+                                if (effect.Target == Constants.Target.Self)
+                                {
+                                    maxTMChamp.ApplyEffect(effect.Effect);
+                                }
+                                else if (effect.Target == Constants.Target.AllAllies)
+                                {
+                                    foreach (ChampionInBattle cib in this.champions)
+                                    {
+                                        if (cib != maxTMChamp)
+                                        {
+                                            cib.ApplyEffect(effect.Effect);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -72,8 +107,43 @@ namespace RaidLib.Simulator
                     if (this.clanBoss.TurnMeter >= Constants.TurnMeter.Full)
                     {
                         //this.PrintTurnMeters();
-                        this.clanBoss.TakeTurn();
+                        TurnAction action = this.clanBoss.TakeTurn();
                         clanBossTurn++;
+
+                        if (action.AttackTarget == Constants.Target.AllEnemies)
+                        {
+                            foreach (ChampionInBattle cib in this.champions)
+                            {
+                                cib.GetAttacked(action.AttackCount);
+                                if (!cib.IsUnkillable)
+                                {
+                                    Console.WriteLine("!!!!!!!!!! {0} attacked but not unkillable !!!!!!!!", cib.Champ.Name);
+                                }
+                            }
+                        }
+                        else if (action.AttackTarget == Constants.Target.OneEnemy)
+                        {
+                            // TODO:  This is the stun.  Apply it to the slowest champion.
+                            ChampionInBattle slowboi = this.champions.First();
+                            foreach (ChampionInBattle cib in this.champions)
+                            {
+                                if (slowboi.Champ.EffectiveSpeed > cib.Champ.EffectiveSpeed)
+                                {
+                                    slowboi = cib;
+                                }
+                            }
+
+                            slowboi.GetAttacked(action.AttackCount);
+                            if (!slowboi.IsUnkillable)
+                            {
+                                Console.WriteLine("!!!!!!!!!! {0} attacked but not unkillable !!!!!!!!", slowboi.Champ.Name);
+                            }
+
+                            if (action.DebuffsToApply != null)
+                            {
+                                slowboi.ApplyDebuff(action.DebuffsToApply.First());
+                            }
+                        }
                     }
                 }
             }

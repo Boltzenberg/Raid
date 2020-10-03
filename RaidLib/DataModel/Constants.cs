@@ -30,26 +30,31 @@ namespace RaidLib.DataModel
 
         public enum Debuff
         {
-            PoisonSensitivity,
             DecreaseDefense60,
             DecreaseAttack50,
-            Poison5,
-            Weaken15,
             HPBurn,
+            Poison5,
+            PoisonSensitivity,
+            Stun,
+            Weaken15,
+        }
+
+        public enum Target
+        {
+            None,
+            AllEnemies,
+            OneEnemy,
+            Self,      // Just me
+            OneAlly,   // Just one ally
+            AllAllies, // Everybody on my team but me
+            FullTeam   // My whole team
         }
 
         public enum Effect
         {
             None,
-            FillSelfTurnMeterBy10Percent,
-            AllyReduceCooldownBy1,
-        }
-
-        public static class Effects
-        {
-            public static readonly HashSet<Effect> ImpactsCurrentChamp = new HashSet<Effect> { Effect.FillSelfTurnMeterBy10Percent };
-            public static readonly HashSet<Effect> ImpactsTeam = new HashSet<Effect> { };
-            public static readonly HashSet<Effect> ImpactsAllies = new HashSet<Effect> { Effect.AllyReduceCooldownBy1 };
+            FillTurnMeterBy10Percent,
+            ReduceCooldownBy1,
         }
 
         public static class TurnMeter

@@ -32,12 +32,31 @@ namespace RaidLib.Simulator
             clock.OnTick += this.OnClockTick;
         }
 
-        public void ApplyBuff(Constants.Buff buff, int duration)
+        public void ApplyBuff(BuffToApply buff)
         {
-
+            if (this.activeBuffs.Count < 10)
+            {
+                this.activeBuffs[buff.Buff] = buff.Duration;
+            }
         }
 
-        public void ApplyDebuff(Constants.Debuff debuff, int duration)
+        public void ApplyDebuff(DebuffToApply debuff)
+        {
+            if (!activeBuffs.ContainsKey(Constants.Buff.BlockDebuffs) && this.activeDebuffs.Count <= 10)
+            {
+                this.activeDebuffs[debuff.Debuff] = debuff.Duration;
+            }
+        }
+
+        public bool IsUnkillable
+        {
+            get
+            {
+                return this.activeBuffs.ContainsKey(Constants.Buff.Unkillable);
+            }
+        }
+
+        public void GetAttacked(int hitCount)
         {
 
         }
@@ -46,12 +65,12 @@ namespace RaidLib.Simulator
         {
             switch (effect)
             {
-                case Constants.Effect.FillSelfTurnMeterBy10Percent:
+                case Constants.Effect.FillTurnMeterBy10Percent:
                     {
                         this.TurnMeter += 0.1f;
                         break;
                     }
-                case Constants.Effect.AllyReduceCooldownBy1:
+                case Constants.Effect.ReduceCooldownBy1:
                     {
                         foreach (SkillInBattle skill in this.skillsToUse)
                         {
@@ -73,7 +92,7 @@ namespace RaidLib.Simulator
 
         public float TurnMeterIncreaseOnClockTick { get; private set; }
 
-        public Constants.Effect TakeTurn()
+        public TurnAction TakeTurn()
         {
             this.turnCount++;
 
@@ -104,11 +123,29 @@ namespace RaidLib.Simulator
                 }
             }
 
+            foreach (Constants.Buff buff in new List<Constants.Buff>(this.activeBuffs.Keys))
+            {
+                this.activeBuffs[buff]--;
+                if (this.activeBuffs[buff] == 0)
+                {
+                    this.activeBuffs.Remove(buff);
+                }
+            }
+
+            foreach (Constants.Debuff debuff in new List<Constants.Debuff>(this.activeDebuffs.Keys))
+            {
+                this.activeDebuffs[debuff]--;
+                if (this.activeDebuffs[debuff] == 0)
+                {
+                    this.activeDebuffs.Remove(debuff);
+                }
+            }
+
             //Console.WriteLine(" {0} uses skill {1} ({2}) with turn meter {3}!", this.Champ.Name, skillToUse.Skill.Id, skillToUse.Skill.Name, this.TurnMeter);
             Console.WriteLine(" {0} Turn {1}: skill {2} ({3})", this.Champ.Name, this.turnCount, skillToUse.Skill.Id, skillToUse.Skill.Name);
             this.TurnMeter = 0;
 
-            return skillToUse.Skill.Effect;
+            return skillToUse.Skill.TurnAction;
         }
 
         private void OnClockTick(object sender)

@@ -8,19 +8,17 @@ namespace RaidLib.DataModel
 {
     public class Skill
     {
-        public Skill(string name, Constants.SkillId id, int cooldown, Constants.Effect effect, int effectDuration)
+        public Skill(string name, Constants.SkillId id, int cooldown, TurnAction turnAction)
         {
             this.Name = name;
             this.Id = id;
             this.Cooldown = cooldown;
-            this.Effect = effect;
-            this.EffectDuration = effectDuration;
+            this.TurnAction = turnAction;
         }
 
         public string Name { get; private set; }
         public Constants.SkillId Id { get; private set; }
         public int Cooldown { get; private set; }
-        public Constants.Effect Effect { get; private set; }
-        public int EffectDuration { get; private set; }
+        public TurnAction TurnAction { get; private set; }
     }
 }
