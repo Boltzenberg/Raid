@@ -7,8 +7,6 @@ namespace RaidLib.Simulator
 {
     public class ChampionInBattle
     {
-        private Dictionary<Constants.Buff, int> activeBuffs;
-        private Dictionary<Constants.Debuff, int> activeDebuffs;
         private List<SkillInBattle> skillsToUse;
         private int turnCount;
 
@@ -17,8 +15,8 @@ namespace RaidLib.Simulator
             this.Champ = champion;
             this.TurnMeter = 0;
             this.turnCount = 0;
-            this.activeBuffs = new Dictionary<Constants.Buff, int>();
-            this.activeDebuffs = new Dictionary<Constants.Debuff, int>();
+            this.ActiveBuffs = new Dictionary<Constants.Buff, int>();
+            this.ActiveDebuffs = new Dictionary<Constants.Debuff, int>();
             this.TurnMeterIncreaseOnClockTick = Constants.TurnMeter.DeltaPerTurn(this.Champ.EffectiveSpeed);
             this.skillsToUse = new List<SkillInBattle>();
             foreach (SkillPolicy skillPolicy in skillPolicies)
@@ -32,19 +30,36 @@ namespace RaidLib.Simulator
             clock.OnTick += this.OnClockTick;
         }
 
+        public Dictionary<Constants.Buff, int> ActiveBuffs { get; private set; }
+        public Dictionary<Constants.Debuff, int> ActiveDebuffs { get; private set; }
+
         public void ApplyBuff(BuffToApply buff)
         {
-            if (this.activeBuffs.Count < 10)
+            if (this.ActiveBuffs.Count < 10)
             {
-                this.activeBuffs[buff.Buff] = buff.Duration;
+                this.ActiveBuffs[buff.Buff] = buff.Duration;
             }
         }
 
         public void ApplyDebuff(DebuffToApply debuff)
         {
-            if (!activeBuffs.ContainsKey(Constants.Buff.BlockDebuffs) && this.activeDebuffs.Count <= 10)
+            if (!this.ActiveBuffs.ContainsKey(Constants.Buff.BlockDebuffs) && this.ActiveDebuffs.Count <= 10)
             {
-                this.activeDebuffs[debuff.Debuff] = debuff.Duration;
+                this.ActiveDebuffs[debuff.Debuff] = debuff.Duration;
+            }
+        }
+
+        public Dictionary<Constants.SkillId, int> SkillCooldowns
+        {
+            get
+            {
+                Dictionary<Constants.SkillId, int> results = new Dictionary<Constants.SkillId, int>();
+                foreach (SkillInBattle sib in this.skillsToUse)
+                {
+                    results[sib.Skill.Id] = sib.CooldownsRemaining;
+                }
+
+                return results;
             }
         }
 
@@ -52,7 +67,7 @@ namespace RaidLib.Simulator
         {
             get
             {
-                return this.activeBuffs.ContainsKey(Constants.Buff.Unkillable);
+                return this.ActiveBuffs.ContainsKey(Constants.Buff.Unkillable);
             }
         }
 
@@ -92,7 +107,7 @@ namespace RaidLib.Simulator
 
         public float TurnMeterIncreaseOnClockTick { get; private set; }
 
-        public TurnAction TakeTurn()
+        public Skill TakeTurn()
         {
             this.turnCount++;
 
@@ -123,21 +138,21 @@ namespace RaidLib.Simulator
                 }
             }
 
-            foreach (Constants.Buff buff in new List<Constants.Buff>(this.activeBuffs.Keys))
+            foreach (Constants.Buff buff in new List<Constants.Buff>(this.ActiveBuffs.Keys))
             {
-                this.activeBuffs[buff]--;
-                if (this.activeBuffs[buff] == 0)
+                this.ActiveBuffs[buff]--;
+                if (this.ActiveBuffs[buff] == 0)
                 {
-                    this.activeBuffs.Remove(buff);
+                    this.ActiveBuffs.Remove(buff);
                 }
             }
 
-            foreach (Constants.Debuff debuff in new List<Constants.Debuff>(this.activeDebuffs.Keys))
+            foreach (Constants.Debuff debuff in new List<Constants.Debuff>(this.ActiveDebuffs.Keys))
             {
-                this.activeDebuffs[debuff]--;
-                if (this.activeDebuffs[debuff] == 0)
+                this.ActiveDebuffs[debuff]--;
+                if (this.ActiveDebuffs[debuff] == 0)
                 {
-                    this.activeDebuffs.Remove(debuff);
+                    this.ActiveDebuffs.Remove(debuff);
                 }
             }
 
@@ -145,7 +160,7 @@ namespace RaidLib.Simulator
             Console.WriteLine(" {0} Turn {1}: skill {2} ({3})", this.Champ.Name, this.turnCount, skillToUse.Skill.Id, skillToUse.Skill.Name);
             this.TurnMeter = 0;
 
-            return skillToUse.Skill.TurnAction;
+            return skillToUse.Skill;
         }
 
         private void OnClockTick(object sender)

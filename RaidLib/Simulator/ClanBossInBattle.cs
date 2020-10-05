@@ -10,8 +10,6 @@ namespace RaidLib.Simulator
     public class ClanBossInBattle
     {
         private ClanBoss clanBoss;
-        private Dictionary<Constants.Buff, int> activeBuffs;
-        private Dictionary<Constants.Debuff, int> activeDebuffs;
         private Skill[] skills;
         private int turnCount;
 
@@ -20,8 +18,8 @@ namespace RaidLib.Simulator
             this.clanBoss = clanBoss;
             this.TurnMeter = 0;
             this.TurnMeterIncreaseOnClockTick = Constants.TurnMeter.DeltaPerTurn(this.clanBoss.Speed);
-            this.activeBuffs = new Dictionary<Constants.Buff, int>();
-            this.activeDebuffs = new Dictionary<Constants.Debuff, int>();
+            this.ActiveBuffs = new Dictionary<Constants.Buff, int>();
+            this.ActiveDebuffs = new Dictionary<Constants.Debuff, int>();
             this.skills = new Skill[3];
             this.skills[0] = clanBoss.Skills.Where(s => s.Id == Constants.SkillId.A1).First();
             this.skills[1] = clanBoss.Skills.Where(s => s.Id == Constants.SkillId.A2).First();
@@ -29,6 +27,9 @@ namespace RaidLib.Simulator
             this.turnCount = 0;
             clock.OnTick += this.OnClockTick;
         }
+
+        public Dictionary<Constants.Buff, int> ActiveBuffs { get; private set; }
+        public Dictionary<Constants.Debuff, int> ActiveDebuffs { get; private set; }
 
         public void ApplyBuff(BuffToApply buff)
         {
@@ -44,7 +45,7 @@ namespace RaidLib.Simulator
 
         public float TurnMeterIncreaseOnClockTick { get; private set; }
 
-        public TurnAction TakeTurn()
+        public Skill TakeTurn()
         {
             int skill = this.turnCount % this.skills.Length;
             this.turnCount++;
@@ -52,7 +53,7 @@ namespace RaidLib.Simulator
             Console.WriteLine("Clan Boss Turn {0}: skill {1} ({2})", this.turnCount, skills[skill].Id, skills[skill].Name);
             this.TurnMeter = 0;
 
-            return this.skills[skill].TurnAction;
+            return this.skills[skill];
         }
 
         private void OnClockTick(object sender)

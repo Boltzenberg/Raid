@@ -52,10 +52,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Simulator\ClanBossBattle.cs" />
     <Compile Include="Simulator\ChampionInBattle.cs" />
+    <Compile Include="Simulator\ClanBossBattleResult.cs" />
+    <Compile Include="Simulator\ClanBossBattleResultsAnalysis.cs" />
     <Compile Include="Simulator\ClanBossInBattle.cs" />
     <Compile Include="Simulator\Clock.cs" />
     <Compile Include="DataModel\SkillPolicy.cs" />
     <Compile Include="Simulator\SkillInBattle.cs" />
+    <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -8,6 +8,11 @@ namespace RaidLib.DataModel
 {
     public static class Constants
     {
+        public static class Names
+        {
+            public const string ClanBoss = "Clan Boss";
+        }
+
         public static class SetBonus
         {
             public const float Speed = 0.12f;
@@ -15,6 +20,7 @@ namespace RaidLib.DataModel
 
         public enum SkillId
         {
+            None,
             A1,
             A2,
             A3,

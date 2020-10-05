@@ -29,21 +29,32 @@ namespace RaidLib.Simulator
             }
         }
 
-        public void Run()
+        public List<ClanBossBattleResult> Run()
         {
+            List<ClanBossBattleResult> results = new List<ClanBossBattleResult>();
+
+            int clockTick = 0;
             int clanBossTurn = 0;
             while (clanBossTurn < MaxClanBossTurns)
             {
+                clockTick++;
                 this.clock.Tick();
                 this.champions.Sort((a, b) => b.TurnMeter.CompareTo(a.TurnMeter));
                 
                 ChampionInBattle maxTMChamp = this.champions.First();
+                string actorName = string.Empty;
+                Constants.SkillId skillIdUsed = Constants.SkillId.None;
+                string skillNameUsed = string.Empty;
                 if (maxTMChamp.TurnMeter > this.clanBoss.TurnMeter)
                 {
                     if (maxTMChamp.TurnMeter >= Constants.TurnMeter.Full)
                     {
+                        actorName = maxTMChamp.Champ.Name;
                         //this.PrintTurnMeters();
-                        TurnAction action = maxTMChamp.TakeTurn();
+                        Skill skillUsed = maxTMChamp.TakeTurn();
+                        skillIdUsed = skillUsed.Id;
+                        skillNameUsed = skillUsed.Name;
+                        TurnAction action = skillUsed.TurnAction;
                         if (action.BuffsToApply != null)
                         {
                             foreach (BuffToApply buff in action.BuffsToApply)
@@ -106,8 +117,12 @@ namespace RaidLib.Simulator
                 {
                     if (this.clanBoss.TurnMeter >= Constants.TurnMeter.Full)
                     {
+                        actorName = Constants.Names.ClanBoss;
                         //this.PrintTurnMeters();
-                        TurnAction action = this.clanBoss.TakeTurn();
+                        Skill skillUsed = this.clanBoss.TakeTurn();
+                        skillIdUsed = skillUsed.Id;
+                        skillNameUsed = skillUsed.Name;
+                        TurnAction action = skillUsed.TurnAction;
                         clanBossTurn++;
 
                         if (action.AttackTarget == Constants.Target.AllEnemies)
@@ -146,7 +161,21 @@ namespace RaidLib.Simulator
                         }
                     }
                 }
+
+                List<ClanBossBattleResult.ChampionStats> champStats = new List<ClanBossBattleResult.ChampionStats>();
+                foreach (ChampionInBattle cib in this.champions)
+                {
+                    ClanBossBattleResult.ChampionStats champStat = new ClanBossBattleResult.ChampionStats(cib.Champ, cib.TurnMeter, new Dictionary<Constants.Buff, int>(cib.ActiveBuffs), new Dictionary<Constants.Debuff, int>(cib.ActiveDebuffs), new Dictionary<Constants.SkillId, int>(cib.SkillCooldowns));
+                    champStats.Add(champStat);
+                }
+
+                ClanBossBattleResult.ClanBossStats cbStats = new ClanBossBattleResult.ClanBossStats(this.clanBoss.TurnMeter, new Dictionary<Constants.Buff, int>(this.clanBoss.ActiveBuffs), new Dictionary<Constants.Debuff, int>(this.clanBoss.ActiveDebuffs));
+
+                ClanBossBattleResult result = new ClanBossBattleResult(clockTick, clanBossTurn, actorName, skillIdUsed, skillNameUsed, champStats, cbStats);
+                results.Add(result);
             }
+
+            return results;
         }
 
         private void PrintTurnMeters()
