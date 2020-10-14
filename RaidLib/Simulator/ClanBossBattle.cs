@@ -15,7 +15,7 @@ namespace RaidLib.Simulator
         private List<ChampionInBattle> champions;
         private const int MaxClanBossTurns = 50;
 
-        public ClanBossBattle(ClanBoss.Level level, List<Champion> champs, Dictionary<Champion, List<SkillPolicy>> skillPoliciesByChampion)
+        public ClanBossBattle(ClanBoss.Level level, List<Champion> champs, Dictionary<Champion, Tuple<List<Constants.SkillId>, List<Constants.SkillId>>> skillPoliciesByChampion)
         {
             this.clock = new Clock();
             ClanBoss cb = ClanBoss.Get(level);
@@ -23,9 +23,9 @@ namespace RaidLib.Simulator
             this.champions = new List<ChampionInBattle>();
             foreach (Champion champ in champs)
             {
-                List<SkillPolicy> policies = null;
+                Tuple<List<Constants.SkillId>, List<Constants.SkillId>> policies = null;
                 skillPoliciesByChampion.TryGetValue(champ, out policies);
-                this.champions.Add(new ChampionInBattle(champ, policies, this.clock));
+                this.champions.Add(new ChampionInBattle(champ, policies.Item1, policies.Item2, this.clock));
             }
         }
 

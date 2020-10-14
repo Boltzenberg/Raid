@@ -56,7 +56,6 @@
     <Compile Include="Simulator\ClanBossBattleResultsAnalysis.cs" />
     <Compile Include="Simulator\ClanBossInBattle.cs" />
     <Compile Include="Simulator\Clock.cs" />
-    <Compile Include="DataModel\SkillPolicy.cs" />
     <Compile Include="Simulator\SkillInBattle.cs" />
     <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>

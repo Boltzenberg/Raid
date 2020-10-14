@@ -8,9 +8,10 @@ namespace RaidLib.Simulator
     public class ChampionInBattle
     {
         private List<SkillInBattle> skillsToUse;
+        private List<Constants.SkillId> startupSkillOrder;
         private int turnCount;
 
-        public ChampionInBattle(Champion champion, List<SkillPolicy> skillPolicies, Clock clock)
+        public ChampionInBattle(Champion champion, List<Constants.SkillId> skillsToUseInThisBattle, List<Constants.SkillId> startupSkillOrder, Clock clock)
         {
             this.Champ = champion;
             this.TurnMeter = 0;
@@ -19,14 +20,15 @@ namespace RaidLib.Simulator
             this.ActiveDebuffs = new Dictionary<Constants.Debuff, int>();
             this.TurnMeterIncreaseOnClockTick = Constants.TurnMeter.DeltaPerTurn(this.Champ.EffectiveSpeed);
             this.skillsToUse = new List<SkillInBattle>();
-            foreach (SkillPolicy skillPolicy in skillPolicies)
+            foreach (Constants.SkillId skillId in skillsToUseInThisBattle)
             {
-                Skill skill = this.Champ.Skills.Where(s => s.Id == skillPolicy.SkillId).First();
+                Skill skill = this.Champ.Skills.Where(s => s.Id == skillId).First();
                 if (Constants.Skills.Active.Contains(skill.Id))
                 {
-                    skillsToUse.Add(new SkillInBattle(skill, skillPolicy));
+                    this.skillsToUse.Add(new SkillInBattle(skill));
                 }
             }
+            this.startupSkillOrder = startupSkillOrder;
             clock.OnTick += this.OnClockTick;
         }
 
@@ -109,23 +111,28 @@ namespace RaidLib.Simulator
 
         public Skill TakeTurn()
         {
-            this.turnCount++;
-
             SkillInBattle skillToUse = null;
-            foreach (SkillInBattle sib in this.skillsToUse)
+            if (this.turnCount < this.startupSkillOrder.Count)
             {
-                if (sib.SkillPolicy.DelayBeforeFirstUse > this.turnCount)
+                skillToUse = this.skillsToUse.First(s => s.Skill.Id == this.startupSkillOrder[this.turnCount]);
+                if (skillToUse.CooldownsRemaining > 0)
                 {
-                    continue;
+                    throw new Exception(string.Format("Startup skills for champion {0} on turn {1} tried to use skill {2} but it is still on cooldown!", this.Champ.Name, this.turnCount, this.startupSkillOrder[this.turnCount]));
                 }
+            }
 
-                if (sib.CooldownsRemaining > 0)
+            if (skillToUse == null)
+            {
+                foreach (SkillInBattle sib in this.skillsToUse)
                 {
-                    continue;
-                }
+                    if (sib.CooldownsRemaining > 0)
+                    {
+                        continue;
+                    }
 
-                skillToUse = sib;
-                break;
+                    skillToUse = sib;
+                    break;
+                }
             }
 
             skillToUse.CooldownsRemaining = skillToUse.Skill.Cooldown;
@@ -155,6 +162,8 @@ namespace RaidLib.Simulator
                     this.ActiveDebuffs.Remove(debuff);
                 }
             }
+
+            this.turnCount++;
 
             //Console.WriteLine(" {0} uses skill {1} ({2}) with turn meter {3}!", this.Champ.Name, skillToUse.Skill.Id, skillToUse.Skill.Name, this.TurnMeter);
             Console.WriteLine(" {0} Turn {1}: skill {2} ({3})", this.Champ.Name, this.turnCount, skillToUse.Skill.Id, skillToUse.Skill.Name);

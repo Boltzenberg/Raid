@@ -16,17 +16,17 @@ namespace ClanBossTurns
     {
         static void Main(string[] args)
         {
-            ClanBoss.Level clanBossLevel = ClanBoss.Level.UltraNightmare;
+            ClanBoss.Level clanBossLevel = ClanBoss.Level.Nightmare;
 
             List<Teams.CreateChampion> championCreators = Teams.DeadwoodJedi.ChampionCreators();
 
             List<Champion> champions = new List<Champion>();
-            Dictionary<Champion, List<SkillPolicy>> skillPoliciesByChampion = new Dictionary<Champion, List<SkillPolicy>>();
+            Dictionary<Champion, Tuple<List<Constants.SkillId>, List<Constants.SkillId>>> skillPoliciesByChampion = new Dictionary<Champion, Tuple<List<Constants.SkillId>, List<Constants.SkillId>>>();
             foreach (Teams.CreateChampion cc in championCreators)
             {
-                Tuple<Champion, List<SkillPolicy>> tuple = cc(clanBossLevel);
+                Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> tuple = cc(clanBossLevel);
                 champions.Add(tuple.Item1);
-                skillPoliciesByChampion[tuple.Item1] = tuple.Item2;
+                skillPoliciesByChampion[tuple.Item1] = new Tuple<List<Constants.SkillId>, List<Constants.SkillId>>(tuple.Item2, tuple.Item3);
             }
 
             ClanBossBattle battle = new ClanBossBattle(clanBossLevel, champions, skillPoliciesByChampion);
