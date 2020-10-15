@@ -41,6 +41,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataModel\Champions\Septimus.cs" />
+    <Compile Include="DataModel\Champions\OccultBrawler.cs" />
+    <Compile Include="DataModel\Champions\FrozenBanshee.cs" />
+    <Compile Include="DataModel\Champions\Bulwark.cs" />
+    <Compile Include="DataModel\Champions\GravechillKiller.cs" />
+    <Compile Include="DataModel\Champions\Aothar.cs" />
+    <Compile Include="DataModel\Champions\RhazinScarhide.cs" />
+    <Compile Include="DataModel\Champions\Painkeeper.cs" />
+    <Compile Include="DataModel\Champions\Maneater.cs" />
     <Compile Include="DataModel\EffectToApply.cs" />
     <Compile Include="DataModel\DebuffToApply.cs" />
     <Compile Include="DataModel\BuffToApply.cs" />
