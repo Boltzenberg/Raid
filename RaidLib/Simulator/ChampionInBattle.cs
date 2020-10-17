@@ -105,9 +105,9 @@ namespace RaidLib.Simulator
 
         public Champion Champ { get; private set; }
 
-        public float TurnMeter { get; private set; }
+        public double TurnMeter { get; private set; }
 
-        public float TurnMeterIncreaseOnClockTick { get; private set; }
+        public double TurnMeterIncreaseOnClockTick { get; private set; }
 
         public Skill TakeTurn()
         {

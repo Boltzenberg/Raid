@@ -15,18 +15,30 @@ namespace RaidLib.Simulator
         private List<ChampionInBattle> champions;
         private const int MaxClanBossTurns = 50;
 
-        public ClanBossBattle(ClanBoss.Level level, List<Champion> champs, Dictionary<Champion, Tuple<List<Constants.SkillId>, List<Constants.SkillId>>> skillPoliciesByChampion)
+        public ClanBossBattle(ClanBoss.Level level, Dictionary<Champion, Tuple<List<Constants.SkillId>, List<Constants.SkillId>>> skillPoliciesByChampion)
         {
             this.clock = new Clock();
             ClanBoss cb = ClanBoss.Get(level);
             this.clanBoss = new ClanBossInBattle(cb, this.clock);
             this.champions = new List<ChampionInBattle>();
-            foreach (Champion champ in champs)
+            foreach (Champion champ in skillPoliciesByChampion.Keys)
             {
-                Tuple<List<Constants.SkillId>, List<Constants.SkillId>> policies = null;
-                skillPoliciesByChampion.TryGetValue(champ, out policies);
+                Tuple<List<Constants.SkillId>, List<Constants.SkillId>> policies = skillPoliciesByChampion[champ];
                 this.champions.Add(new ChampionInBattle(champ, policies.Item1, policies.Item2, this.clock));
             }
+        }
+
+        private static double GetMaxTurnMeter(List<ChampionInBattle> champs, ClanBossInBattle cb)
+        {
+            double maxTM = double.MinValue;
+            foreach (ChampionInBattle champ in champs)
+            {
+                maxTM = Math.Max(maxTM, champ.TurnMeter);
+            }
+
+            maxTM = Math.Max(maxTM, cb.TurnMeter);
+
+            return maxTM;
         }
 
         public List<ClanBossBattleResult> Run()
@@ -39,18 +51,28 @@ namespace RaidLib.Simulator
             {
                 clockTick++;
                 this.clock.Tick();
-                this.champions.Sort((a, b) => b.TurnMeter.CompareTo(a.TurnMeter));
-                
-                ChampionInBattle maxTMChamp = this.champions.First();
-                string actorName = string.Empty;
-                Constants.SkillId skillIdUsed = Constants.SkillId.None;
-                string skillNameUsed = string.Empty;
-                if (maxTMChamp.TurnMeter > this.clanBoss.TurnMeter)
+                double maxTurnMeter = GetMaxTurnMeter(this.champions, this.clanBoss);
+
+                if (maxTurnMeter > Constants.TurnMeter.Full)
                 {
-                    if (maxTMChamp.TurnMeter >= Constants.TurnMeter.Full)
+                    string actorName = string.Empty;
+                    Constants.SkillId skillIdUsed = Constants.SkillId.None;
+                    string skillNameUsed = string.Empty;
+
+                    ChampionInBattle maxTMChamp = null;
+                    foreach (ChampionInBattle champ in this.champions)
+                    {
+                        if (champ.TurnMeter == maxTurnMeter)
+                        {
+                            maxTMChamp = champ;
+                            break;
+                        }
+                    }
+
+                    if (maxTMChamp != null)
                     {
                         actorName = maxTMChamp.Champ.Name;
-                        //this.PrintTurnMeters();
+                        // this.PrintTurnMeters();
                         Skill skillUsed = maxTMChamp.TakeTurn();
                         skillIdUsed = skillUsed.Id;
                         skillNameUsed = skillUsed.Name;
@@ -112,13 +134,10 @@ namespace RaidLib.Simulator
                             }
                         }
                     }
-                }
-                else
-                {
-                    if (this.clanBoss.TurnMeter >= Constants.TurnMeter.Full)
+                    else
                     {
                         actorName = Constants.Names.ClanBoss;
-                        //this.PrintTurnMeters();
+                        // this.PrintTurnMeters();
                         Skill skillUsed = this.clanBoss.TakeTurn();
                         skillIdUsed = skillUsed.Id;
                         skillNameUsed = skillUsed.Name;
@@ -160,19 +179,19 @@ namespace RaidLib.Simulator
                             }
                         }
                     }
+
+                    List<ClanBossBattleResult.ChampionStats> champStats = new List<ClanBossBattleResult.ChampionStats>();
+                    foreach (ChampionInBattle cib in this.champions)
+                    {
+                        ClanBossBattleResult.ChampionStats champStat = new ClanBossBattleResult.ChampionStats(cib.Champ, cib.TurnMeter, new Dictionary<Constants.Buff, int>(cib.ActiveBuffs), new Dictionary<Constants.Debuff, int>(cib.ActiveDebuffs), new Dictionary<Constants.SkillId, int>(cib.SkillCooldowns));
+                        champStats.Add(champStat);
+                    }
+
+                    ClanBossBattleResult.ClanBossStats cbStats = new ClanBossBattleResult.ClanBossStats(this.clanBoss.TurnMeter, new Dictionary<Constants.Buff, int>(this.clanBoss.ActiveBuffs), new Dictionary<Constants.Debuff, int>(this.clanBoss.ActiveDebuffs));
+
+                    ClanBossBattleResult result = new ClanBossBattleResult(clockTick, clanBossTurn, actorName, skillIdUsed, skillNameUsed, champStats, cbStats);
+                    results.Add(result);
                 }
-
-                List<ClanBossBattleResult.ChampionStats> champStats = new List<ClanBossBattleResult.ChampionStats>();
-                foreach (ChampionInBattle cib in this.champions)
-                {
-                    ClanBossBattleResult.ChampionStats champStat = new ClanBossBattleResult.ChampionStats(cib.Champ, cib.TurnMeter, new Dictionary<Constants.Buff, int>(cib.ActiveBuffs), new Dictionary<Constants.Debuff, int>(cib.ActiveDebuffs), new Dictionary<Constants.SkillId, int>(cib.SkillCooldowns));
-                    champStats.Add(champStat);
-                }
-
-                ClanBossBattleResult.ClanBossStats cbStats = new ClanBossBattleResult.ClanBossStats(this.clanBoss.TurnMeter, new Dictionary<Constants.Buff, int>(this.clanBoss.ActiveBuffs), new Dictionary<Constants.Debuff, int>(this.clanBoss.ActiveDebuffs));
-
-                ClanBossBattleResult result = new ClanBossBattleResult(clockTick, clanBossTurn, actorName, skillIdUsed, skillNameUsed, champStats, cbStats);
-                results.Add(result);
             }
 
             return results;

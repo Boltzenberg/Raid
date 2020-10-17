@@ -64,10 +64,10 @@ namespace SpeedCalculator
             this.ExtractSpeed(this.tbSpeedSets, ref speedSets);
 
             int artifactSpeed = weaponSpeed + helmetSpeed + shieldSpeed + glovesSpeed + chestSpeed + bootsSpeed + amuletSpeed + bannerSpeed;
-            float speedSetBoost = baseSpeed * speedSets * Constants.SetBonus.Speed;
+            double speedSetBoost = baseSpeed * speedSets * Constants.SetBonus.Speed;
 
             this.tbUI.Text = (baseSpeed + artifactSpeed + (int)Math.Round(speedSetBoost)).ToString();
-            this.tbEffective.Text = ((float)baseSpeed + (float)artifactSpeed + speedSetBoost).ToString();
+            this.tbEffective.Text = ((double)baseSpeed + (double)artifactSpeed + speedSetBoost).ToString();
         }
     }
 }

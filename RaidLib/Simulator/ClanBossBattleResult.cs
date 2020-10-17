@@ -39,11 +39,11 @@ namespace RaidLib.Simulator
 
         public class ClanBossStats
         {
-            public float TurnMeter { get; private set; }
+            public double TurnMeter { get; private set; }
             public Dictionary<Constants.Buff, int> ActiveBuffs { get; private set; }
             public Dictionary<Constants.Debuff, int> ActiveDebuffs { get; private set; }
 
-            public ClanBossStats(float turnMeter, Dictionary<Constants.Buff, int> activeBuffs, Dictionary<Constants.Debuff, int> activeDebuffs)
+            public ClanBossStats(double turnMeter, Dictionary<Constants.Buff, int> activeBuffs, Dictionary<Constants.Debuff, int> activeDebuffs)
             {
                 this.TurnMeter = turnMeter;
                 this.ActiveBuffs = activeBuffs;
@@ -54,12 +54,12 @@ namespace RaidLib.Simulator
         public class ChampionStats
         {
             public Champion Champion { get; private set; }
-            public float TurnMeter { get; private set; }
+            public double TurnMeter { get; private set; }
             public Dictionary<Constants.Buff, int> ActiveBuffs { get; private set; }
             public Dictionary<Constants.Debuff, int> ActiveDebuffs { get; private set; }
             public Dictionary<Constants.SkillId, int> SkillCooldowns { get; private set; }
 
-            public ChampionStats(Champion champion, float turnMeter, Dictionary<Constants.Buff, int> activeBuffs, Dictionary<Constants.Debuff, int> activeDebuffs, Dictionary<Constants.SkillId, int> skillCooldowns)
+            public ChampionStats(Champion champion, double turnMeter, Dictionary<Constants.Buff, int> activeBuffs, Dictionary<Constants.Debuff, int> activeDebuffs, Dictionary<Constants.SkillId, int> skillCooldowns)
             {
                 this.Champion = champion;
                 this.TurnMeter = turnMeter;

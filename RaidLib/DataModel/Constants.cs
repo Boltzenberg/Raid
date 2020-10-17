@@ -15,7 +15,7 @@ namespace RaidLib.DataModel
 
         public static class SetBonus
         {
-            public const float Speed = 0.12f;
+            public const double Speed = 0.12d;
         }
 
         public enum SkillId
@@ -65,11 +65,12 @@ namespace RaidLib.DataModel
 
         public static class TurnMeter
         {
-            public const float Full = 1.0f;
+            public const double Full = 1.0d;
 
-            public static float DeltaPerTurn(float effectiveSpeed)
+            public static double DeltaPerTurn(double effectiveSpeed)
             {
-                const float magicSpeedNumber = 10000 / 7;
+                //const double magicSpeedNumber = 10000 / 7;
+                const double magicSpeedNumber = 1428.571429d;
                 return effectiveSpeed / magicSpeedNumber;
             }
         }

@@ -9,9 +9,9 @@ namespace RaidLib.Utilities
 {
     public static class Utils
     {
-        public static Champion FindSlowestChampion(List<Champion> champions)
+        public static Champion FindSlowestChampion(IEnumerable<Champion> champions)
         {
-            Champion slowest = champions[0];
+            Champion slowest = champions.First();
             foreach (Champion champion in champions)
             {
                 if (champion.EffectiveSpeed < slowest.EffectiveSpeed)

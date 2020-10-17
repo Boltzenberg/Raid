@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaidLib", "RaidLib\RaidLib.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpeedCalculator", "SpeedCalculator\SpeedCalculator.csproj", "{84194DD7-6AC6-46E9-B9AE-A68D5AC4423D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaidLibTests", "RaidLibTests\RaidLibTests.csproj", "{1DC20FA1-00E3-4352-BF25-98C2F93733F7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{84194DD7-6AC6-46E9-B9AE-A68D5AC4423D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84194DD7-6AC6-46E9-B9AE-A68D5AC4423D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84194DD7-6AC6-46E9-B9AE-A68D5AC4423D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DC20FA1-00E3-4352-BF25-98C2F93733F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DC20FA1-00E3-4352-BF25-98C2F93733F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DC20FA1-00E3-4352-BF25-98C2F93733F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DC20FA1-00E3-4352-BF25-98C2F93733F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

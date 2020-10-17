@@ -17,9 +17,14 @@ namespace RaidLib.DataModel
             this.SpeedSets = speedSets;
             this.Skills = skills;
 
-            float setSpeedBoost = baseSpeed * speedSets * Constants.SetBonus.Speed;
+            double setSpeedBoost = baseSpeed * speedSets * Constants.SetBonus.Speed;
             int artifactSpeed = uiSpeed - baseSpeed - (int)Math.Round(setSpeedBoost);
             this.EffectiveSpeed = baseSpeed + artifactSpeed + setSpeedBoost;
+        }
+
+        public Champion Clone(int uiSpeedDelta, int speedSets)
+        {
+            return new Champion(this.Name, this.BaseSpeed, this.UISpeed + uiSpeedDelta, speedSets, this.Skills);
         }
 
         public string Name { get; private set; }
@@ -29,7 +34,7 @@ namespace RaidLib.DataModel
         public int UISpeed { get; private set; }
         public int SpeedSets { get; private set; }
 
-        public float EffectiveSpeed { get; }
+        public double EffectiveSpeed { get; }
 
         public List<Skill> Skills { get; private set; }
     }
