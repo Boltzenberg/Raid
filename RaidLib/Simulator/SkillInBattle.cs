@@ -12,5 +12,11 @@ namespace RaidLib.Simulator
             this.Skill = skill;
             this.CooldownsRemaining = 0;
         }
+
+        public SkillInBattle(SkillInBattle other)
+        {
+            this.Skill = other.Skill;
+            this.CooldownsRemaining = other.CooldownsRemaining;
+        }
     }
 }

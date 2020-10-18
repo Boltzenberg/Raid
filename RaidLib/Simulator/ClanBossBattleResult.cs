@@ -9,63 +9,44 @@ namespace RaidLib.Simulator
 {
     public class ClanBossBattleResult
     {
-        // Each iteration through the simulation loop
-        public int ClockTick { get; private set; }
-
-        // How many turns has the clan boss had at this point?
         public int ClanBossTurn { get; private set; }
 
-        // Who went in this clock tick?
         public string ActorName { get; private set; }
+
+        public int ActorTurn { get; private set; }
 
         public Constants.SkillId Skill { get; private set; }
         
         public string SkillName { get; private set; }
 
-        public List<ChampionStats> Champions { get; private set; }
+        public Constants.SkillId ExpectedAISkill { get; private set; }
 
-        public ClanBossStats ClanBoss { get; private set; }
+        public List<BattleParticipantStats> BattleParticipants { get; private set; }
 
-        public ClanBossBattleResult(int clockTick, int clanBossTurn, string actorName, Constants.SkillId skill, string skillName, List<ChampionStats> championStats, ClanBossStats clanBossStats)
+        public ClanBossBattleResult(int clanBossTurn, string actorName, int actorTurn, Constants.SkillId skill, string skillName, Constants.SkillId aiSkill, List<BattleParticipantStats> battleParticipantStats)
         {
-            this.ClockTick = clockTick;
             this.ClanBossTurn = clanBossTurn;
             this.ActorName = actorName;
+            this.ActorTurn = actorTurn;
             this.Skill = skill;
             this.SkillName = skillName;
-            this.Champions = championStats;
-            this.ClanBoss = clanBossStats;
+            this.ExpectedAISkill = aiSkill;
+            this.BattleParticipants = battleParticipantStats;
         }
 
-        public class ClanBossStats
+        public class BattleParticipantStats
         {
+            public string Name { get; private set; }
+            public bool IsClanBoss { get; private set; }
             public double TurnMeter { get; private set; }
             public Dictionary<Constants.Buff, int> ActiveBuffs { get; private set; }
-            public Dictionary<Constants.Debuff, int> ActiveDebuffs { get; private set; }
 
-            public ClanBossStats(double turnMeter, Dictionary<Constants.Buff, int> activeBuffs, Dictionary<Constants.Debuff, int> activeDebuffs)
+            public BattleParticipantStats(string name, bool isClanBoss, double turnMeter, Dictionary<Constants.Buff, int> activeBuffs)
             {
+                this.Name = name;
+                this.IsClanBoss = isClanBoss;
                 this.TurnMeter = turnMeter;
                 this.ActiveBuffs = activeBuffs;
-                this.ActiveDebuffs = activeDebuffs;
-            }
-        }
-
-        public class ChampionStats
-        {
-            public Champion Champion { get; private set; }
-            public double TurnMeter { get; private set; }
-            public Dictionary<Constants.Buff, int> ActiveBuffs { get; private set; }
-            public Dictionary<Constants.Debuff, int> ActiveDebuffs { get; private set; }
-            public Dictionary<Constants.SkillId, int> SkillCooldowns { get; private set; }
-
-            public ChampionStats(Champion champion, double turnMeter, Dictionary<Constants.Buff, int> activeBuffs, Dictionary<Constants.Debuff, int> activeDebuffs, Dictionary<Constants.SkillId, int> skillCooldowns)
-            {
-                this.Champion = champion;
-                this.TurnMeter = turnMeter;
-                this.ActiveBuffs = activeBuffs;
-                this.ActiveDebuffs = activeDebuffs;
-                this.SkillCooldowns = skillCooldowns;
             }
         }
     }

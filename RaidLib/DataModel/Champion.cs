@@ -24,6 +24,11 @@ namespace RaidLib.DataModel
 
         public Champion Clone(int uiSpeedDelta, int speedSets)
         {
+            if (uiSpeedDelta == 0 && speedSets == this.SpeedSets)
+            {
+                return this;
+            }
+
             return new Champion(this.Name, this.BaseSpeed, this.UISpeed + uiSpeedDelta, speedSets, this.Skills);
         }
 

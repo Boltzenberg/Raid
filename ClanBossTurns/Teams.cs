@@ -9,6 +9,130 @@ namespace ClanBossTurns
     {
         public delegate Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateChampion(ClanBoss.Level level);
 
+        public static class UnkillableBase
+        {
+            static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateManeater(ClanBoss.Level level)
+            {
+                List<Constants.SkillId> skillsToUse = new List<Constants.SkillId>()
+                {
+                    Constants.SkillId.A3,
+                    Constants.SkillId.A1,
+                };
+
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Maneater.Create(227, 2), skillsToUse, new List<Constants.SkillId>());
+            }
+
+            static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreatePainkeeper(ClanBoss.Level level)
+            {
+                List<Constants.SkillId> skillsToUse = new List<Constants.SkillId>()
+                {
+                    Constants.SkillId.A3,
+                    Constants.SkillId.A2,
+                    Constants.SkillId.A1,
+                };
+
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Painkeeper.Create(213, 2), skillsToUse, new List<Constants.SkillId>());
+            }
+
+            static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateDPS1(ClanBoss.Level level)
+            {
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(
+                    new Champion("DPS1", 169, 169, 0, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
+                    new List<Constants.SkillId>() { Constants.SkillId.A1 },
+                    new List<Constants.SkillId>());
+            }
+
+            static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateDPS2(ClanBoss.Level level)
+            {
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(
+                    new Champion("DPS2", 169, 169, 0, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
+                    new List<Constants.SkillId>() { Constants.SkillId.A1 },
+                    new List<Constants.SkillId>());
+            }
+
+            static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateSlowboi(ClanBoss.Level level)
+            {
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(
+                    new Champion("Slowboi", 106, 106, 0, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
+                    new List<Constants.SkillId>() { Constants.SkillId.A1 },
+                    new List<Constants.SkillId>());
+            }
+
+            public static List<CreateChampion> ChampionCreators()
+            {
+                return new List<CreateChampion>()
+                {
+                    CreateManeater,
+                    CreatePainkeeper,
+                    CreateDPS1,
+                    CreateDPS2,
+                    CreateSlowboi
+                };
+            }
+        }
+
+        public static class UnkillableDWJBase
+        {
+            static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateManeater(ClanBoss.Level level)
+            {
+                List<Constants.SkillId> skillsToUse = new List<Constants.SkillId>()
+                {
+                    Constants.SkillId.A3,
+                    Constants.SkillId.A1,
+                };
+
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Maneater.Create(240, 3), skillsToUse, new List<Constants.SkillId>());
+            }
+
+            static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreatePainkeeper(ClanBoss.Level level)
+            {
+                List<Constants.SkillId> skillsToUse = new List<Constants.SkillId>()
+                {
+                    Constants.SkillId.A3,
+                    Constants.SkillId.A2,
+                    Constants.SkillId.A1,
+                };
+
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Painkeeper.Create(221, 3), skillsToUse, new List<Constants.SkillId>());
+            }
+
+            static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateDPS1(ClanBoss.Level level)
+            {
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(
+                    new Champion("DPS1", 91, 177, 1, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
+                    new List<Constants.SkillId>() { Constants.SkillId.A1 },
+                    new List<Constants.SkillId>());
+            }
+
+            static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateDPS2(ClanBoss.Level level)
+            {
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(
+                    new Champion("DPS2", 102, 175, 2, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
+                    new List<Constants.SkillId>() { Constants.SkillId.A1 },
+                    new List<Constants.SkillId>());
+            }
+
+            static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateSlowboi(ClanBoss.Level level)
+            {
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(
+                    new Champion("Slowboi", 92, 114, 1, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
+                    new List<Constants.SkillId>() { Constants.SkillId.A1 },
+                    new List<Constants.SkillId>());
+            }
+
+            public static List<CreateChampion> ChampionCreators()
+            {
+                return new List<CreateChampion>()
+                {
+                    CreateManeater,
+                    CreatePainkeeper,
+                    CreateDPS1,
+                    CreateDPS2,
+                    CreateSlowboi
+                };
+            }
+        }
+
         public static class Gunga
         {
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateManeater(ClanBoss.Level level)
@@ -213,11 +337,6 @@ namespace ClanBossTurns
                     CreateAothar
                 };
             }
-        }
-
-        public static class BTrain
-        {
-
         }
     }
 }

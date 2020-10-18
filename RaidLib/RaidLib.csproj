@@ -59,13 +59,15 @@
     <Compile Include="DataModel\Constants.cs" />
     <Compile Include="DataModel\TurnAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Simulator\IBattleParticipant.cs" />
+    <Compile Include="Simulator\UnkillableClanBossBattle.cs" />
     <Compile Include="Simulator\ClanBossBattle.cs" />
     <Compile Include="Simulator\ChampionInBattle.cs" />
     <Compile Include="Simulator\ClanBossBattleResult.cs" />
     <Compile Include="Simulator\ClanBossBattleResultsAnalysis.cs" />
     <Compile Include="Simulator\ClanBossInBattle.cs" />
-    <Compile Include="Simulator\Clock.cs" />
     <Compile Include="Simulator\SkillInBattle.cs" />
+    <Compile Include="Simulator\UnkillableSearcher.cs" />
     <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
   <ItemGroup />

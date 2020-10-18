@@ -20,7 +20,7 @@ namespace RaidLib.Simulator
                     if (result.Skill == Constants.SkillId.A1 || result.Skill == Constants.SkillId.A2)
                     {
                         // AOE hits, all champs must be unkillable
-                        foreach (ClanBossBattleResult.ChampionStats championStat in result.Champions)
+                        foreach (ClanBossBattleResult.BattleParticipantStats championStat in result.BattleParticipants.Where(bp => !bp.IsClanBoss))
                         {
                             if (!championStat.ActiveBuffs.ContainsKey(Constants.Buff.Unkillable))
                             {
@@ -31,8 +31,8 @@ namespace RaidLib.Simulator
                     else if (result.Skill == Constants.SkillId.A3)
                     {
                         // Single target stun
-                        ClanBossBattleResult.ChampionStats championStat = result.Champions.Where(cs => cs.Champion == stunTarget).First();
-                        if (!championStat.ActiveBuffs.ContainsKey(Constants.Buff.Unkillable))
+                        ClanBossBattleResult.BattleParticipantStats bpStats = result.BattleParticipants.Where(bp => bp.Name == stunTarget.Name).First();
+                        if (!bpStats.ActiveBuffs.ContainsKey(Constants.Buff.Unkillable))
                         {
                             turn = result.ClanBossTurn;
                         }
