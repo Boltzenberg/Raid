@@ -20,5 +20,13 @@ namespace RaidLib.DataModel
         public Constants.SkillId Id { get; private set; }
         public int Cooldown { get; private set; }
         public TurnAction TurnAction { get; private set; }
+
+        public static Skill StunRecovery
+        {
+            get
+            {
+                return new Skill("Stun Recovery", Constants.SkillId.Recovery, 0, new TurnAction(0, Constants.Target.None, null, null, null));
+            }
+        }
     }
 }

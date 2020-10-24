@@ -17,6 +17,7 @@ namespace RaidLib.Simulator
 
         IEnumerable<Skill> AllAvailableSkills();
         Skill NextAISkill();
+        Skill GetA1();
         void TakeTurn(Skill skill);
         void ClockTick();
 

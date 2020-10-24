@@ -123,6 +123,12 @@ namespace RaidLib.Simulator
 
         public IEnumerable<Skill> AllAvailableSkills()
         {
+            if (this.ActiveDebuffs.ContainsKey(Constants.Debuff.Stun))
+            {
+                yield return Skill.StunRecovery;
+                yield break;
+            }
+
             if (this.TurnCount < this.startupSkillOrder.Count)
             {
                 SkillInBattle skillToUse = this.skillsToUse.First(s => s.Skill.Id == this.startupSkillOrder[this.TurnCount]);
@@ -149,6 +155,11 @@ namespace RaidLib.Simulator
 
         public Skill NextAISkill()
         {
+            if (this.ActiveDebuffs.ContainsKey(Constants.Debuff.Stun))
+            {
+                return Skill.StunRecovery;
+            }
+
             SkillInBattle skillToUse = null;
             if (this.TurnCount < this.startupSkillOrder.Count)
             {
@@ -176,15 +187,23 @@ namespace RaidLib.Simulator
             return skillToUse.Skill;
         }
 
+        public Skill GetA1()
+        {
+            return this.skillsToUse.Where(s => s.Skill.Id == Constants.SkillId.A1).First().Skill;
+        }
+
         public void TakeTurn(Skill skill)
         {
-            SkillInBattle skillToUse = this.skillsToUse.FirstOrDefault(sib => sib.Skill == skill);
-            if (skillToUse == null || skillToUse.CooldownsRemaining != 0)
+            if (skill.Id != Constants.SkillId.Recovery)
             {
-                throw new ArgumentException(string.Format("Skill {0} ({1}) is not available!", skill.Id, skill.Name));
-            }
+                SkillInBattle skillToUse = this.skillsToUse.FirstOrDefault(sib => sib.Skill == skill);
+                if (skillToUse == null || skillToUse.CooldownsRemaining != 0)
+                {
+                    throw new ArgumentException(string.Format("Skill {0} ({1}) is not available!", skill.Id, skill.Name));
+                }
 
-            skillToUse.CooldownsRemaining = skillToUse.Skill.Cooldown;
+                skillToUse.CooldownsRemaining = skillToUse.Skill.Cooldown;
+            }
 
             foreach (SkillInBattle sib in this.skillsToUse)
             {

@@ -10,7 +10,7 @@ using RaidLib.Simulator;
 namespace RaidLibTests.Simulator
 {
     [TestClass]
-    public class ClanBossBattleTest
+    public class UnkillableClanBossBattleTest
     {
         private static Champion CreateChampion(string name, int uiSpeed)
         {
@@ -83,15 +83,15 @@ namespace RaidLibTests.Simulator
                 // 40
             };
 
-            ClanBossBattle battle = new ClanBossBattle(ClanBoss.Level.Brutal, GetChampions());
+            UnkillableClanBossBattle battle = new UnkillableClanBossBattle(ClanBoss.Level.Brutal, GetChampions());
             List<ClanBossBattleResult> results = battle.Run();
-            List<ClanBossBattleResult> actual = results.Where(r => !string.IsNullOrEmpty(r.ActorName)).ToList();
+            List<ClanBossBattleResult> actual = results.Where(r => !string.IsNullOrEmpty(r.AttackDetails.ActorName)).ToList();
 
             Assert.IsTrue(actual.Count > expected.Count);
             for (int i = 0; i < expected.Count; i++)
             {
-                Assert.AreEqual(expected[i].Item1, actual[i].ActorName, "Wrong champion went in result " + i);
-                Assert.AreEqual(expected[i].Item2, actual[i].Skill, "Wrong skill used by champion " + expected[i].Item1 + " in results " + i);
+                Assert.AreEqual(expected[i].Item1, actual[i].AttackDetails.ActorName, "Wrong champion went in result " + i);
+                Assert.AreEqual(expected[i].Item2, actual[i].AttackDetails.Skill, "Wrong skill used by champion " + expected[i].Item1 + " in results " + i);
             }
         }
 
@@ -150,15 +150,15 @@ namespace RaidLibTests.Simulator
                 // 40
             };
 
-            ClanBossBattle battle = new ClanBossBattle(ClanBoss.Level.Nightmare, GetChampions());
+            UnkillableClanBossBattle battle = new UnkillableClanBossBattle(ClanBoss.Level.Nightmare, GetChampions());
             List<ClanBossBattleResult> results = battle.Run();
-            List<ClanBossBattleResult> actual = results.Where(r => !string.IsNullOrEmpty(r.ActorName)).ToList();
+            List<ClanBossBattleResult> actual = results.Where(r => !string.IsNullOrEmpty(r.AttackDetails.ActorName)).ToList();
 
             Assert.IsTrue(actual.Count > expected.Count);
             for (int i = 0; i < expected.Count; i++)
             {
-                Assert.AreEqual(expected[i].Item1, actual[i].ActorName, "Wrong champion went in result " + i);
-                Assert.AreEqual(expected[i].Item2, actual[i].Skill, "Wrong skill used by champion " + expected[i].Item1 + " in results " + i);
+                Assert.AreEqual(expected[i].Item1, actual[i].AttackDetails.ActorName, "Wrong champion went in result " + i);
+                Assert.AreEqual(expected[i].Item2, actual[i].AttackDetails.Skill, "Wrong skill used by champion " + expected[i].Item1 + " in results " + i);
             }
         }
     }

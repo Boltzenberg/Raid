@@ -201,7 +201,37 @@ namespace ClanBossTurns
             //SearchForUnkillableSpeeds(ClanBoss.Level.Nightmare, Teams.Gunga.ChampionCreators());
             //SearchForUnkillableSpeeds(ClanBoss.Level.UltraNightmare, Teams.Gunga.ChampionCreators());
             //TestClanBossRun(ClanBoss.Level.Nightmare, Teams.Gunga.ChampionCreators());
-            TestUnkillableClanBossRun(ClanBoss.Level.Brutal, Teams.UnkillableBase.ChampionCreators(), true);
+            //TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, Teams.Rust.ChampionCreators(), true);
+            TestCounterattackTeam(ClanBoss.Level.Nightmare, Teams.Chilli.ChampionCreators());
+        }
+
+        static void TestCounterattackTeam(ClanBoss.Level clanBossLevel, List<Teams.CreateChampion> championCreators)
+        {
+            List<Champion> champions = new List<Champion>();
+            Dictionary<Champion, Tuple<List<Constants.SkillId>, List<Constants.SkillId>>> skillPoliciesByChampion = new Dictionary<Champion, Tuple<List<Constants.SkillId>, List<Constants.SkillId>>>();
+            foreach (Teams.CreateChampion cc in championCreators)
+            {
+                Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> tuple = cc(clanBossLevel);
+                champions.Add(tuple.Item1);
+                skillPoliciesByChampion[tuple.Item1] = new Tuple<List<Constants.SkillId>, List<Constants.SkillId>>(tuple.Item2, tuple.Item3);
+            }
+
+            UnkillableClanBossBattle baseline = new UnkillableClanBossBattle(clanBossLevel, skillPoliciesByChampion);
+            List<ClanBossBattleResult> results = baseline.Run();
+
+            foreach (ClanBossBattleResult result in results)
+            {
+                Console.WriteLine("{0,2}: {1,20} turn {2,2} use skill {3} ({4,20})", result.ClanBossTurn, result.AttackDetails.ActorName, result.AttackDetails.ActorTurn, result.AttackDetails.Skill, result.AttackDetails.SkillName);
+                if (result.Counterattacks != null)
+                {
+                    foreach (ClanBossBattleResult.Attack ca in result.Counterattacks)
+                    {
+                        Console.WriteLine("    {0,20} counterattacks for turn {1,2}", ca.ActorName, ca.ActorTurn);
+                    }
+                }
+            }
+
+            Console.ReadLine();
         }
 
         static void TestUnkillableClanBossRun(ClanBoss.Level clanBossLevel, List<Teams.CreateChampion> championCreators, bool startupSequenceSearch)
@@ -238,10 +268,10 @@ namespace ClanBossTurns
                 Console.WriteLine("Run is over!");
                 foreach (ClanBossBattleResult result in results)
                 {
-                    Console.WriteLine("{0,2}: {1,20} turn {2,2} use skill {3} ({4})", result.ClanBossTurn, result.ActorName, result.ActorTurn, result.Skill, result.SkillName);
-                    if (result.ActorName != Constants.Names.ClanBoss)
+                    Console.WriteLine("{0,2}: {1,20} turn {2,2} use skill {3} ({4})", result.ClanBossTurn, result.AttackDetails.ActorName, result.AttackDetails.ActorTurn, result.AttackDetails.Skill, result.AttackDetails.SkillName);
+                    if (result.AttackDetails.ActorName != Constants.Names.ClanBoss)
                     {
-                        if (result.ExpectedAISkill != result.Skill)
+                        if (result.AttackDetails.ExpectedAISkill != result.AttackDetails.Skill)
                         {
                             autoAfterCBTurn = result.ClanBossTurn;
                         }
@@ -265,7 +295,7 @@ namespace ClanBossTurns
                 Console.WriteLine("Optimal Result:");
                 foreach (ClanBossBattleResult result in optimalResults)
                 {
-                    Console.WriteLine("{0,2}: {1,20} turn {2,2} use skill {3} ({4,20}) - Unkillable Champs: {5}", result.ClanBossTurn, result.ActorName, result.ActorTurn, result.Skill, result.SkillName, string.Join(", ", result.BattleParticipants.Where(p => !p.IsClanBoss && p.ActiveBuffs.ContainsKey(Constants.Buff.Unkillable)).Select(p => p.Name)));
+                    Console.WriteLine("{0,2}: {1,20} turn {2,2} use skill {3} ({4,20}) - Unkillable Champs: {5}", result.ClanBossTurn, result.AttackDetails.ActorName, result.AttackDetails.ActorTurn, result.AttackDetails.Skill, result.AttackDetails.SkillName, string.Join(", ", result.BattleParticipants.Where(p => !p.IsClanBoss && p.ActiveBuffs.ContainsKey(Constants.Buff.Unkillable)).Select(p => p.Name)));
                 }
                 int lastKillableTurn = ClanBossBattleResultsAnalysis.LastClanBossTurnThatHitKillableChampion(optimalResults, Utils.FindSlowestChampion(champions));
 
@@ -274,26 +304,26 @@ namespace ClanBossTurns
 
                 Console.WriteLine();
                 Console.WriteLine("Maneater setup");
-                foreach (ClanBossBattleResult result in optimalResults.Where(r => r.ActorName == "Maneater"))
+                foreach (ClanBossBattleResult result in optimalResults.Where(r => r.AttackDetails.ActorName == "Maneater"))
                 {
                     if (result.ClanBossTurn > optimalAutoAfterCBTurn)
                     {
                         break;
                     }
 
-                    Console.WriteLine("Turn {0,2}, Skill {1} ({2})", result.ActorTurn, result.Skill, result.SkillName);
+                    Console.WriteLine("Turn {0,2}, Skill {1} ({2})", result.AttackDetails.ActorTurn, result.AttackDetails.Skill, result.AttackDetails.SkillName);
                 }
 
                 Console.WriteLine();
                 Console.WriteLine("Painkeeper setup");
-                foreach (ClanBossBattleResult result in optimalResults.Where(r => r.ActorName == "Painkeeper"))
+                foreach (ClanBossBattleResult result in optimalResults.Where(r => r.AttackDetails.ActorName == "Painkeeper"))
                 {
                     if (result.ClanBossTurn > optimalAutoAfterCBTurn)
                     {
                         break;
                     }
 
-                    Console.WriteLine("Turn {0,2}, Skill {1} ({2})", result.ActorTurn, result.Skill, result.SkillName);
+                    Console.WriteLine("Turn {0,2}, Skill {1} ({2})", result.AttackDetails.ActorTurn, result.AttackDetails.Skill, result.AttackDetails.SkillName);
                 }
             }
             else

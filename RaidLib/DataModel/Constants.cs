@@ -21,6 +21,7 @@ namespace RaidLib.DataModel
         public enum SkillId
         {
             None,
+            Recovery,
             A1,
             A2,
             A3,
@@ -31,6 +32,7 @@ namespace RaidLib.DataModel
         public enum Buff
         {
             BlockDebuffs,
+            Counterattack,
             Unkillable,
         }
 

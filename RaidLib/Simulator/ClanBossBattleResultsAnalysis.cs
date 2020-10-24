@@ -15,9 +15,9 @@ namespace RaidLib.Simulator
 
             foreach (ClanBossBattleResult result in results)
             {
-                if (result.ActorName == Constants.Names.ClanBoss)
+                if (result.AttackDetails.ActorName == Constants.Names.ClanBoss)
                 {
-                    if (result.Skill == Constants.SkillId.A1 || result.Skill == Constants.SkillId.A2)
+                    if (result.AttackDetails.Skill == Constants.SkillId.A1 || result.AttackDetails.Skill == Constants.SkillId.A2)
                     {
                         // AOE hits, all champs must be unkillable
                         foreach (ClanBossBattleResult.BattleParticipantStats championStat in result.BattleParticipants.Where(bp => !bp.IsClanBoss))
@@ -28,7 +28,7 @@ namespace RaidLib.Simulator
                             }
                         }    
                     }
-                    else if (result.Skill == Constants.SkillId.A3)
+                    else if (result.AttackDetails.Skill == Constants.SkillId.A3)
                     {
                         // Single target stun
                         ClanBossBattleResult.BattleParticipantStats bpStats = result.BattleParticipants.Where(bp => bp.Name == stunTarget.Name).First();

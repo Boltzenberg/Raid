@@ -9,29 +9,42 @@ namespace RaidLib.Simulator
 {
     public class ClanBossBattleResult
     {
+        public class Attack
+        {
+            public string ActorName { get; private set; }
+
+            public int ActorTurn { get; private set; }
+
+            public Constants.SkillId Skill { get; private set; }
+
+            public string SkillName { get; private set; }
+
+            public Constants.SkillId ExpectedAISkill { get; private set; }
+
+            public Attack(string actorName, int actorTurn, Constants.SkillId skill, string skillName, Constants.SkillId expectedAISkill)
+            {
+                this.ActorName = actorName;
+                this.ActorTurn = actorTurn;
+                this.Skill = skill;
+                this.SkillName = skillName;
+                this.ExpectedAISkill = expectedAISkill;
+            }
+        }
+
         public int ClanBossTurn { get; private set; }
 
-        public string ActorName { get; private set; }
+        public Attack AttackDetails { get; private set; }
 
-        public int ActorTurn { get; private set; }
-
-        public Constants.SkillId Skill { get; private set; }
-        
-        public string SkillName { get; private set; }
-
-        public Constants.SkillId ExpectedAISkill { get; private set; }
+        public List<Attack> Counterattacks { get; private set; }
 
         public List<BattleParticipantStats> BattleParticipants { get; private set; }
 
-        public ClanBossBattleResult(int clanBossTurn, string actorName, int actorTurn, Constants.SkillId skill, string skillName, Constants.SkillId aiSkill, List<BattleParticipantStats> battleParticipantStats)
+        public ClanBossBattleResult(int clanBossTurn, Attack attackDetails, List<BattleParticipantStats> battleParticipantStats, List<Attack> counterattacks)
         {
             this.ClanBossTurn = clanBossTurn;
-            this.ActorName = actorName;
-            this.ActorTurn = actorTurn;
-            this.Skill = skill;
-            this.SkillName = skillName;
-            this.ExpectedAISkill = aiSkill;
+            this.AttackDetails = attackDetails;
             this.BattleParticipants = battleParticipantStats;
+            this.Counterattacks = counterattacks;
         }
 
         public class BattleParticipantStats

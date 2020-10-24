@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataModel\Champions\SkullCrusher.cs" />
+    <Compile Include="DataModel\Champions\CoffinSmasher.cs" />
     <Compile Include="DataModel\Champions\Septimus.cs" />
     <Compile Include="DataModel\Champions\OccultBrawler.cs" />
     <Compile Include="DataModel\Champions\FrozenBanshee.cs" />

@@ -80,6 +80,11 @@ namespace RaidLib.Simulator
             return this.skills[this.TurnCount % this.skills.Length];
         }
 
+        public Skill GetA1()
+        {
+            return this.skills.Where(s => s.Id == Constants.SkillId.A1).First();
+        }
+
         public void TakeTurn(Skill skill)
         {
             this.TurnCount++;

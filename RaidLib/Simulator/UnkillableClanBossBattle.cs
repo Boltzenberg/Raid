@@ -116,6 +116,7 @@ namespace RaidLib.Simulator
                 {
                     // Champion with the fullest turn meter takes a turn!
                     IBattleParticipant maxTMChamp = state.BattleParticipants.First(bp => bp.TurnMeter == maxTurnMeter);
+
                     IEnumerable<Skill> skillsToRun;
                     Skill nextAISkill = maxTMChamp.NextAISkill();
                     if (exploreAllSequences && state.BattleParticipants.Where(bp => bp.IsClanBoss).First().TurnCount < AutoAfterClanBossTurn)
@@ -132,6 +133,8 @@ namespace RaidLib.Simulator
                     {
                         state = new UCBBState(currentState);
                         IBattleParticipant champ = state.BattleParticipants.Where(bp => bp.Name == maxTMChamp.Name).First();
+                        List<IBattleParticipant> counterAttackers = new List<IBattleParticipant>();
+
                         champ.TakeTurn(skill);
 
                         if (!champ.IsClanBoss)
@@ -193,6 +196,13 @@ namespace RaidLib.Simulator
                                 foreach (IBattleParticipant bp in state.BattleParticipants.Where(p => !p.IsClanBoss))
                                 {
                                     bp.GetAttacked(action.AttackCount);
+                                    
+                                    if (bp.ActiveBuffs.ContainsKey(Constants.Buff.Counterattack) &&
+                                        !bp.ActiveDebuffs.ContainsKey(Constants.Debuff.Stun))
+                                    {
+                                        counterAttackers.Add(bp);
+                                    }
+
                                     if (champ.TurnCount > LastKillableTurn && !bp.ActiveBuffs.ContainsKey(Constants.Buff.Unkillable))
                                     {
                                         // run failed!
@@ -214,6 +224,7 @@ namespace RaidLib.Simulator
                                 }
 
                                 slowboi.GetAttacked(action.AttackCount);
+
                                 if (champ.TurnCount > LastKillableTurn && !slowboi.ActiveBuffs.ContainsKey(Constants.Buff.Unkillable))
                                 {
                                     // run failed
@@ -225,6 +236,18 @@ namespace RaidLib.Simulator
                                 {
                                     slowboi.ApplyDebuff(action.DebuffsToApply.First());
                                 }
+
+                                if (slowboi.ActiveBuffs.ContainsKey(Constants.Buff.Counterattack) &&
+                                    !slowboi.ActiveDebuffs.ContainsKey(Constants.Debuff.Stun))
+                                {
+                                    counterAttackers.Add(slowboi);
+                                }
+                            }
+
+                            foreach (IBattleParticipant bp in counterAttackers)
+                            {
+                                bp.TakeTurn(bp.GetA1());
+                                // Track this!
                             }
 
                             if (champ.TurnCount == MaxClanBossTurns)
@@ -247,7 +270,14 @@ namespace RaidLib.Simulator
                             bpStats.Add(bpStat);
                         }
 
-                        ClanBossBattleResult result = new ClanBossBattleResult(state.BattleParticipants.First(p => p.IsClanBoss).TurnCount, champ.Name, champ.TurnCount, skill.Id, skill.Name, nextAISkill.Id, bpStats);
+                        ClanBossBattleResult.Attack attackDetails = new ClanBossBattleResult.Attack(champ.Name, champ.TurnCount, skill.Id, skill.Name, nextAISkill.Id);
+                        List<ClanBossBattleResult.Attack> counterattacks = new List<ClanBossBattleResult.Attack>();
+                        foreach (IBattleParticipant bp in counterAttackers)
+                        {
+                            counterattacks.Add(new ClanBossBattleResult.Attack(bp.Name, bp.TurnCount, Constants.SkillId.A1, bp.GetA1().Name, Constants.SkillId.A1));
+                        }
+
+                        ClanBossBattleResult result = new ClanBossBattleResult(state.BattleParticipants.First(p => p.IsClanBoss).TurnCount, attackDetails, bpStats, counterattacks);
                         state.Results.Add(result);
 
                         if (returnResults)

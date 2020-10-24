@@ -10,8 +10,8 @@ namespace RaidLib.Simulator
 {
     public class ClanBossBattle
     {
-        private ClanBossInBattle clanBoss;
-        private List<ChampionInBattle> champions;
+        //private ClanBossInBattle clanBoss;
+        //private List<ChampionInBattle> champions;
         List<IBattleParticipant> battleParticipants;
         private const int MaxClanBossTurns = 50;
 
@@ -194,7 +194,7 @@ namespace RaidLib.Simulator
             return results;*/
             return null;
         }
-
+        /*
         private void PrintTurnMeters()
         {
             foreach (ChampionInBattle cib in this.champions)
@@ -202,6 +202,6 @@ namespace RaidLib.Simulator
                 Console.WriteLine("  Champion {0} turn meter {1}", cib.Champ.Name, cib.TurnMeter);
             }
             Console.WriteLine("  Clan Boss turn meter {0}", this.clanBoss.TurnMeter);
-        }
+        }*/
     }
 }
