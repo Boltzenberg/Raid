@@ -258,22 +258,20 @@ namespace ClanBossTurns
             //SearchForUnkillableSpeeds(ClanBoss.Level.UltraNightmare, Teams.Gunga.ChampionCreators());
             //TestClanBossRun(ClanBoss.Level.Nightmare, Teams.Gunga.ChampionCreators());
             //TestUnkillableClanBossRun(ClanBoss.Level.Nightmare, Teams.Gunga.ChampionCreators(), false);
-            //TestCounterattackTeam(ClanBoss.Level.Nightmare, Teams.ChilliNM.ChampionCreators(), Teams.ChilliNM.GetStunTarget);
-            FixGungasTeam(ClanBoss.Level.Nightmare);
+            TestCounterattackTeam(ClanBoss.Level.Nightmare, Teams.ChilliNM.ChampionCreators(), Teams.ChilliNM.GetStunTarget);
         }
 
         static void TestCounterattackTeam(ClanBoss.Level clanBossLevel, List<Teams.CreateChampion> championCreators, ClanBossBattle.StunTargetExtractor getStunTarget)
         {
             List<Champion> champions = new List<Champion>();
-            Dictionary<Champion, Tuple<List<Constants.SkillId>, List<Constants.SkillId>>> skillPoliciesByChampion = new Dictionary<Champion, Tuple<List<Constants.SkillId>, List<Constants.SkillId>>>();
+            List<ChampionInBattle> cibs = new List<ChampionInBattle>();
             foreach (Teams.CreateChampion cc in championCreators)
             {
                 Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> tuple = cc(clanBossLevel);
-                champions.Add(tuple.Item1);
-                skillPoliciesByChampion[tuple.Item1] = new Tuple<List<Constants.SkillId>, List<Constants.SkillId>>(tuple.Item2, tuple.Item3);
+                cibs.Add(new ChampionInBattle(tuple.Item1, tuple.Item2, tuple.Item3));
             }
 
-            ClanBossBattle battle = new ClanBossBattle(clanBossLevel, skillPoliciesByChampion);
+            ClanBossBattle battle = new ClanBossBattle(clanBossLevel, cibs);
             battle.GetStunTarget = getStunTarget;
 
             List<ClanBossBattleResult> results = battle.Run();

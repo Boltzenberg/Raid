@@ -106,7 +106,22 @@ namespace RaidLib.Simulator
                         this.TurnMeter += 0.1f;
                         break;
                     }
-                case Constants.Effect.ReduceCooldownBy1:
+                case Constants.Effect.ReduceDebuffCooldownBy1:
+                    {
+                        foreach (Constants.Debuff debuff in new List<Constants.Debuff>(this.ActiveDebuffs.Keys))
+                        {
+                            if (this.ActiveDebuffs[debuff] == 1)
+                            {
+                                this.ActiveDebuffs.Remove(debuff);
+                            }
+                            else
+                            {
+                                this.ActiveDebuffs[debuff]--;
+                            }
+                        }
+                        break;
+                    }
+                case Constants.Effect.ReduceSkillCooldownBy1:
                     {
                         foreach (SkillInBattle skill in this.skillsToUse)
                         {
@@ -131,6 +146,11 @@ namespace RaidLib.Simulator
             }
 
             return cooldowns;
+        }
+
+        public IEnumerable<Skill> GetPassiveSkills()
+        {
+            return this.Champ.Skills.Where(s => s.IsPassive);
         }
 
         public IEnumerable<Skill> AllAvailableSkills()
@@ -215,8 +235,8 @@ namespace RaidLib.Simulator
         }
 
         private void TakeTurn(Skill skill, bool isCounterattack)
-        { 
-            if (skill.Id != Constants.SkillId.Recovery)
+        {
+            if (skill.Id != Constants.SkillId.RE)
             {
                 SkillInBattle skillToUse = this.skillsToUse.FirstOrDefault(sib => sib.Skill == skill);
                 if (skillToUse == null || skillToUse.CooldownsRemaining != 0)
@@ -254,13 +274,11 @@ namespace RaidLib.Simulator
                         this.ActiveDebuffs.Remove(debuff);
                     }
                 }
+
+                this.TurnMeter = 0;
             }
 
             this.TurnCount++;
-
-            //Console.WriteLine(" {0} uses skill {1} ({2}) with turn meter {3}!", this.Champ.Name, skillToUse.Skill.Id, skillToUse.Skill.Name, this.TurnMeter);
-            //Console.WriteLine(" {0} Turn {1}: skill {2} ({3})", this.Champ.Name, this.TurnCount, skillToUse.Skill.Id, skillToUse.Skill.Name);
-            this.TurnMeter = 0;
         }
 
         public void ClockTick()

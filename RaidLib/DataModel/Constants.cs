@@ -21,7 +21,7 @@ namespace RaidLib.DataModel
         public enum SkillId
         {
             None,
-            Recovery,
+            RE,
             A1,
             A2,
             A3,
@@ -62,7 +62,14 @@ namespace RaidLib.DataModel
         {
             None,
             FillTurnMeterBy10Percent,
-            ReduceCooldownBy1,
+            ReduceDebuffCooldownBy1,
+            ReduceSkillCooldownBy1,
+        }
+
+        public enum TimeInTurn
+        {
+            Beginning,
+            End
         }
 
         public static class TurnMeter

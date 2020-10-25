@@ -80,18 +80,18 @@ namespace ClanBossTurns
 
             public static IBattleParticipant GetStunTarget(List<IBattleParticipant> bps)
             {
-                return bps.Where(bp => bp.Name == "Frozen Banshee").First();
+                return bps.Where(bp => bp.Name == "Skullcrusher").First();
             }
 
             public static List<CreateChampion> ChampionCreators()
             {
                 return new List<CreateChampion>()
                 {
+                    CreateSkullcrusher,
                     CreateFrozenBanshee,
                     CreateSeptimus,
                     CreateRhazinScarhide,
                     CreateCoffinSmasher,
-                    CreateSkullcrusher
                 };
             }
         }

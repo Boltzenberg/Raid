@@ -76,6 +76,11 @@ namespace RaidLib.Simulator
             return cooldowns;
         }
 
+        public IEnumerable<Skill> GetPassiveSkills()
+        {
+            yield break;
+        }
+
         public IEnumerable<Skill> AllAvailableSkills()
         {
             yield return NextAISkill();

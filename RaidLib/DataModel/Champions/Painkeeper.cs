@@ -16,13 +16,13 @@ namespace RaidLib.DataModel.Champions
                 "Unflagging Advance",
                 Constants.SkillId.A1,
                 0,
-                new TurnAction(1, Constants.Target.OneEnemy, new List<EffectToApply>() { new EffectToApply(Constants.Effect.FillTurnMeterBy10Percent, Constants.Target.Self) }, null, null)));
+                new TurnAction(1, Constants.Target.OneEnemy, new List<EffectToApply>() { new EffectToApply(Constants.Effect.FillTurnMeterBy10Percent, Constants.Target.Self, Constants.TimeInTurn.End) }, null, null)));
             skills.Add(new Skill("Spectacular Sweep", Constants.SkillId.A2, 4, TurnAction.AttackOneEnemy()));
             skills.Add(new Skill(
                 "Combat Tactics",
                 Constants.SkillId.A3,
                 4,
-                new TurnAction(0, Constants.Target.None, new List<EffectToApply>() { new EffectToApply(Constants.Effect.ReduceCooldownBy1, Constants.Target.AllAllies) }, null, null)));
+                new TurnAction(0, Constants.Target.None, new List<EffectToApply>() { new EffectToApply(Constants.Effect.ReduceSkillCooldownBy1, Constants.Target.AllAllies, Constants.TimeInTurn.End) }, null, null)));
 
             return new Champion("Painkeeper", 102, uiSpeed, speedSets, skills);
         }

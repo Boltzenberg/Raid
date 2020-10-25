@@ -130,6 +130,30 @@ namespace RaidLib.Simulator
                     // Champion with the fullest turn meter takes a turn!
                     IBattleParticipant maxTMChamp = state.BattleParticipants.First(bp => bp.TurnMeter == maxTurnMeter);
 
+                    foreach (Skill passive in maxTMChamp.GetPassiveSkills())
+                    {
+                        if (passive.TurnAction.EffectsToApply != null)
+                        {
+                            foreach (EffectToApply effect in passive.TurnAction.EffectsToApply)
+                            {
+                                if (effect.WhenToApply == Constants.TimeInTurn.Beginning)
+                                {
+                                    if (effect.Target == Constants.Target.Self)
+                                    {
+                                        maxTMChamp.ApplyEffect(effect.Effect);
+                                    }
+                                    else if (effect.Target == Constants.Target.AllAllies)
+                                    {
+                                        foreach (IBattleParticipant bp in state.BattleParticipants.Where(p => !p.IsClanBoss && p != maxTMChamp))
+                                        {
+                                            bp.ApplyEffect(effect.Effect);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     IEnumerable<Skill> skillsToRun;
                     Skill nextAISkill = maxTMChamp.NextAISkill();
                     if (exploreAllSequences && state.BattleParticipants.Where(bp => bp.IsClanBoss).First().TurnCount < AutoAfterClanBossTurn)
@@ -191,6 +215,30 @@ namespace RaidLib.Simulator
                                         foreach (IBattleParticipant bp in state.BattleParticipants.Where(p => !p.IsClanBoss && p != champ))
                                         {
                                             bp.ApplyEffect(effect.Effect);
+                                        }
+                                    }
+                                }
+                            }
+
+                            foreach (Skill passive in champ.GetPassiveSkills())
+                            {
+                                if (passive.TurnAction.EffectsToApply != null)
+                                {
+                                    foreach (EffectToApply effect in passive.TurnAction.EffectsToApply)
+                                    {
+                                        if (effect.WhenToApply == Constants.TimeInTurn.End)
+                                        {
+                                            if (effect.Target == Constants.Target.Self)
+                                            {
+                                                champ.ApplyEffect(effect.Effect);
+                                            }
+                                            else if (effect.Target == Constants.Target.AllAllies)
+                                            {
+                                                foreach (IBattleParticipant bp in state.BattleParticipants.Where(p => !p.IsClanBoss && p != champ))
+                                                {
+                                                    bp.ApplyEffect(effect.Effect);
+                                                }
+                                            }
                                         }
                                     }
                                 }

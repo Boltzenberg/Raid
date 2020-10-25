@@ -16,6 +16,7 @@ namespace RaidLib.Simulator
         int TurnCount { get; }
 
         Dictionary<Constants.SkillId, int> GetSkillToCooldownMap();
+        IEnumerable<Skill> GetPassiveSkills();
         IEnumerable<Skill> AllAvailableSkills();
         Skill NextAISkill();
         Skill GetA1();
