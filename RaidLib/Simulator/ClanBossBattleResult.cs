@@ -15,16 +15,19 @@ namespace RaidLib.Simulator
 
             public int ActorTurn { get; private set; }
 
+            public double ActorTurnMeter { get; private set; }
+
             public Constants.SkillId Skill { get; private set; }
 
             public string SkillName { get; private set; }
 
             public Constants.SkillId ExpectedAISkill { get; private set; }
 
-            public Attack(string actorName, int actorTurn, Constants.SkillId skill, string skillName, Constants.SkillId expectedAISkill)
+            public Attack(string actorName, int actorTurn, double actorTurnMeter, Constants.SkillId skill, string skillName, Constants.SkillId expectedAISkill)
             {
                 this.ActorName = actorName;
                 this.ActorTurn = actorTurn;
+                this.ActorTurnMeter = actorTurnMeter;
                 this.Skill = skill;
                 this.SkillName = skillName;
                 this.ExpectedAISkill = expectedAISkill;
@@ -53,13 +56,15 @@ namespace RaidLib.Simulator
             public bool IsClanBoss { get; private set; }
             public double TurnMeter { get; private set; }
             public Dictionary<Constants.Buff, int> ActiveBuffs { get; private set; }
+            public Dictionary<Constants.SkillId, int> SkillCooldownMap { get; private set; }
 
-            public BattleParticipantStats(string name, bool isClanBoss, double turnMeter, Dictionary<Constants.Buff, int> activeBuffs)
+            public BattleParticipantStats(string name, bool isClanBoss, double turnMeter, Dictionary<Constants.Buff, int> activeBuffs, Dictionary<Constants.SkillId, int> skillCooldownMap)
             {
                 this.Name = name;
                 this.IsClanBoss = isClanBoss;
                 this.TurnMeter = turnMeter;
                 this.ActiveBuffs = activeBuffs;
+                this.SkillCooldownMap = skillCooldownMap;
             }
         }
     }

@@ -70,6 +70,12 @@ namespace RaidLib.Simulator
 
         }
 
+        public Dictionary<Constants.SkillId, int> GetSkillToCooldownMap()
+        {
+            Dictionary<Constants.SkillId, int> cooldowns = new Dictionary<Constants.SkillId, int>();
+            return cooldowns;
+        }
+
         public IEnumerable<Skill> AllAvailableSkills()
         {
             yield return NextAISkill();
@@ -83,6 +89,11 @@ namespace RaidLib.Simulator
         public Skill GetA1()
         {
             return this.skills.Where(s => s.Id == Constants.SkillId.A1).First();
+        }
+
+        public void Counterattack()
+        {
+
         }
 
         public void TakeTurn(Skill skill)

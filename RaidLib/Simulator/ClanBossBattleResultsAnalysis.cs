@@ -9,6 +9,33 @@ namespace RaidLib.Simulator
 {
     public static class ClanBossBattleResultsAnalysis
     {
+        public static void PrintResults(List<ClanBossBattleResult> results, bool includeUnkillable, bool includeTM)
+        {
+            foreach (ClanBossBattleResult result in results)
+            {
+                string suffix = string.Empty;
+                if (includeUnkillable)
+                {
+                    suffix = string.Format(" - Unkillable Champs: {0}", string.Join(", ", result.BattleParticipants.Where(p => !p.IsClanBoss && p.ActiveBuffs.ContainsKey(Constants.Buff.Unkillable)).Select(p => p.Name)));
+                }
+
+                if (includeTM)
+                {
+                    suffix += string.Format(" - TM: {0}", string.Join(", ", result.BattleParticipants.Where(p => !p.IsClanBoss).Select(p => p.Name + ": " + p.TurnMeter)));
+                }
+
+                Console.WriteLine("{0,2}: {1,20} turn {2,2} use skill {3} ({4,20}){5}", result.ClanBossTurn, result.AttackDetails.ActorName, result.AttackDetails.ActorTurn, result.AttackDetails.Skill, result.AttackDetails.SkillName, suffix);
+
+                if (result.Counterattacks != null)
+                {
+                    foreach (ClanBossBattleResult.Attack ca in result.Counterattacks)
+                    {
+                        Console.WriteLine("    {0,20} counterattacks for turn {1,2}", ca.ActorName, ca.ActorTurn);
+                    }
+                }
+            }
+        }
+
         public static int LastClanBossTurnThatHitKillableChampion(List<ClanBossBattleResult> results, Champion stunTarget)
         {
             int turn = -1;

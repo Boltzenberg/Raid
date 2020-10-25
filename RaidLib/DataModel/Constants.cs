@@ -10,7 +10,7 @@ namespace RaidLib.DataModel
     {
         public static class Names
         {
-            public const string ClanBoss = "Clan Boss";
+            public const string ClanBoss = "CLAN BOSS";
         }
 
         public static class SetBonus

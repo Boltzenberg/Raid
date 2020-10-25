@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 
 namespace RaidLib.Simulator
@@ -121,6 +122,17 @@ namespace RaidLib.Simulator
             }
         }
 
+        public Dictionary<Constants.SkillId, int> GetSkillToCooldownMap()
+        {
+            Dictionary<Constants.SkillId, int> cooldowns = new Dictionary<Constants.SkillId, int>();
+            foreach (SkillInBattle sib in this.skillsToUse)
+            {
+                cooldowns[sib.Skill.Id] = sib.CooldownsRemaining;
+            }
+
+            return cooldowns;
+        }
+
         public IEnumerable<Skill> AllAvailableSkills()
         {
             if (this.ActiveDebuffs.ContainsKey(Constants.Debuff.Stun))
@@ -192,8 +204,18 @@ namespace RaidLib.Simulator
             return this.skillsToUse.Where(s => s.Skill.Id == Constants.SkillId.A1).First().Skill;
         }
 
+        public void Counterattack()
+        {
+            this.TakeTurn(this.GetA1(), true);
+        }
+
         public void TakeTurn(Skill skill)
         {
+            this.TakeTurn(skill, false);
+        }
+
+        private void TakeTurn(Skill skill, bool isCounterattack)
+        { 
             if (skill.Id != Constants.SkillId.Recovery)
             {
                 SkillInBattle skillToUse = this.skillsToUse.FirstOrDefault(sib => sib.Skill == skill);
@@ -205,29 +227,32 @@ namespace RaidLib.Simulator
                 skillToUse.CooldownsRemaining = skillToUse.Skill.Cooldown;
             }
 
-            foreach (SkillInBattle sib in this.skillsToUse)
+            if (!isCounterattack)
             {
-                if (sib.CooldownsRemaining > 0)
+                foreach (SkillInBattle sib in this.skillsToUse)
                 {
-                    sib.CooldownsRemaining--;
+                    if (sib.CooldownsRemaining > 0)
+                    {
+                        sib.CooldownsRemaining--;
+                    }
                 }
-            }
 
-            foreach (Constants.Buff buff in new List<Constants.Buff>(this.ActiveBuffs.Keys))
-            {
-                this.ActiveBuffs[buff]--;
-                if (this.ActiveBuffs[buff] == 0)
+                foreach (Constants.Buff buff in new List<Constants.Buff>(this.ActiveBuffs.Keys))
                 {
-                    this.ActiveBuffs.Remove(buff);
+                    this.ActiveBuffs[buff]--;
+                    if (this.ActiveBuffs[buff] == 0)
+                    {
+                        this.ActiveBuffs.Remove(buff);
+                    }
                 }
-            }
 
-            foreach (Constants.Debuff debuff in new List<Constants.Debuff>(this.ActiveDebuffs.Keys))
-            {
-                this.ActiveDebuffs[debuff]--;
-                if (this.ActiveDebuffs[debuff] == 0)
+                foreach (Constants.Debuff debuff in new List<Constants.Debuff>(this.ActiveDebuffs.Keys))
                 {
-                    this.ActiveDebuffs.Remove(debuff);
+                    this.ActiveDebuffs[debuff]--;
+                    if (this.ActiveDebuffs[debuff] == 0)
+                    {
+                        this.ActiveDebuffs.Remove(debuff);
+                    }
                 }
             }
 

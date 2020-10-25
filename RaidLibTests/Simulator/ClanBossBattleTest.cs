@@ -10,7 +10,7 @@ using RaidLib.Simulator;
 namespace RaidLibTests.Simulator
 {
     [TestClass]
-    public class UnkillableClanBossBattleTest
+    public class ClanBossBattleTest
     {
         private static Champion CreateChampion(string name, int uiSpeed)
         {
@@ -83,7 +83,7 @@ namespace RaidLibTests.Simulator
                 // 40
             };
 
-            UnkillableClanBossBattle battle = new UnkillableClanBossBattle(ClanBoss.Level.Brutal, GetChampions());
+            ClanBossBattle battle = new ClanBossBattle(ClanBoss.Level.Brutal, GetChampions());
             List<ClanBossBattleResult> results = battle.Run();
             List<ClanBossBattleResult> actual = results.Where(r => !string.IsNullOrEmpty(r.AttackDetails.ActorName)).ToList();
 
@@ -150,7 +150,7 @@ namespace RaidLibTests.Simulator
                 // 40
             };
 
-            UnkillableClanBossBattle battle = new UnkillableClanBossBattle(ClanBoss.Level.Nightmare, GetChampions());
+            ClanBossBattle battle = new ClanBossBattle(ClanBoss.Level.Nightmare, GetChampions());
             List<ClanBossBattleResult> results = battle.Run();
             List<ClanBossBattleResult> actual = results.Where(r => !string.IsNullOrEmpty(r.AttackDetails.ActorName)).ToList();
 

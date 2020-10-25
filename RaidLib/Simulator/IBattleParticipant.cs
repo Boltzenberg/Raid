@@ -15,10 +15,12 @@ namespace RaidLib.Simulator
         double TurnMeterIncreaseOnClockTick { get; }
         int TurnCount { get; }
 
+        Dictionary<Constants.SkillId, int> GetSkillToCooldownMap();
         IEnumerable<Skill> AllAvailableSkills();
         Skill NextAISkill();
         Skill GetA1();
         void TakeTurn(Skill skill);
+        void Counterattack();
         void ClockTick();
 
         void ApplyBuff(BuffToApply buff);

@@ -10,198 +10,291 @@ namespace RaidLib.Simulator
 {
     public class ClanBossBattle
     {
-        //private ClanBossInBattle clanBoss;
-        //private List<ChampionInBattle> champions;
-        List<IBattleParticipant> battleParticipants;
+        public delegate IBattleParticipant StunTargetExtractor(List<IBattleParticipant> bps);
+
+        private static IBattleParticipant FindSlowBoi(List<IBattleParticipant> bps)
+        {
+            IBattleParticipant slowboi = bps.First();
+            foreach (IBattleParticipant bp in bps)
+            {
+                if (slowboi.TurnMeterIncreaseOnClockTick > bp.TurnMeterIncreaseOnClockTick)
+                {
+                    slowboi = bp;
+                }
+            }
+
+            return slowboi;
+        }
+
+        private class CBBState
+        {
+            public List<IBattleParticipant> BattleParticipants { get; private set; }
+            public List<ClanBossBattleResult> Results { get; private set; }
+
+            public CBBState(List<ChampionInBattle> champions, ClanBossInBattle clanBoss)
+            {
+                this.BattleParticipants = new List<IBattleParticipant>();
+                foreach (ChampionInBattle cib in champions)
+                {
+                    this.BattleParticipants.Add(cib);
+                }
+                this.BattleParticipants.Add(clanBoss);
+
+                this.Results = new List<ClanBossBattleResult>();
+            }
+
+            public CBBState(CBBState other)
+            {
+                this.BattleParticipants = new List<IBattleParticipant>();
+                foreach (IBattleParticipant bp in other.BattleParticipants)
+                {
+                    this.BattleParticipants.Add(bp.Clone());
+                }
+                this.Results = new List<ClanBossBattleResult>(other.Results);
+            }
+        }
+
         private const int MaxClanBossTurns = 50;
+        private const int LastKillableTurn = 7;
+        private const int AutoAfterClanBossTurn = 7;
+        private CBBState initialState;
+
+        public StunTargetExtractor GetStunTarget { get; set; }
+
+        public ClanBossBattle(ClanBoss.Level level, List<ChampionInBattle> championsInBattle)
+        {
+            ClanBossInBattle clanBoss = new ClanBossInBattle(ClanBoss.Get(level));
+            this.initialState = new CBBState(new List<ChampionInBattle>(championsInBattle), clanBoss);
+            this.GetStunTarget = FindSlowBoi;
+        }
 
         public ClanBossBattle(ClanBoss.Level level, Dictionary<Champion, Tuple<List<Constants.SkillId>, List<Constants.SkillId>>> skillPoliciesByChampion)
         {
-            this.battleParticipants = new List<IBattleParticipant>();
+            ClanBossInBattle clanBoss = new ClanBossInBattle(ClanBoss.Get(level));
+            List<ChampionInBattle> champions = new List<ChampionInBattle>();
             foreach (Champion champ in skillPoliciesByChampion.Keys)
             {
                 Tuple<List<Constants.SkillId>, List<Constants.SkillId>> policies = skillPoliciesByChampion[champ];
-                this.battleParticipants.Add(new ChampionInBattle(champ, policies.Item1, policies.Item2));
+                champions.Add(new ChampionInBattle(champ, policies.Item1, policies.Item2));
             }
-            this.battleParticipants.Add(new ClanBossInBattle(ClanBoss.Get(level)));
+
+            this.initialState = new CBBState(champions, clanBoss);
+            this.GetStunTarget = FindSlowBoi;
         }
 
         public List<ClanBossBattleResult> Run()
         {
-            /*
-            List<ClanBossBattleResult> results = new List<ClanBossBattleResult>();
+            return this.Run(false, false).First();
+        }
 
-            bool continueBattle = true;
-            while (continueBattle)
+        public IEnumerable<List<ClanBossBattleResult>> FindUnkillableStartupSequences()
+        {
+            return this.Run(true, true);
+        }
+
+        private IEnumerable<List<ClanBossBattleResult>> Run(bool exploreAllSequences, bool failOnKill)
+        { 
+            Queue<CBBState> battleStates = new Queue<CBBState>();
+            battleStates.Enqueue(this.initialState);
+
+            // While the queue isn't empty
+            // run all possible next turns for the head of the queue state and enqueue those states
+            // If someone is killed after the last unkillable turn, the run fails (no more enqueues)
+            // If clan boss has turn 50, the run succeeds (return the result)
+            while (battleStates.Count > 0)
             {
+                CBBState state = battleStates.Dequeue();
+                bool returnResults = false;
+
                 // Advance turn meter for each battle participant
-                foreach (IBattleParticipant participant in this.battleParticipants)
+                foreach (IBattleParticipant participant in state.BattleParticipants)
                 {
                     participant.ClockTick();
                 }
 
                 // See who has the most turn meter
                 double maxTurnMeter = double.MinValue;
-                foreach (IBattleParticipant participant in this.battleParticipants)
+                foreach (IBattleParticipant participant in state.BattleParticipants)
                 {
                     maxTurnMeter = Math.Max(maxTurnMeter, participant.TurnMeter);
                 }
 
                 // See if anybody has a full turn meter
-                if (maxTurnMeter > Constants.TurnMeter.Full)
+                if (maxTurnMeter <= Constants.TurnMeter.Full)
                 {
-                    string actorName = string.Empty;
-                    Constants.SkillId skillIdUsed = Constants.SkillId.None;
-                    string skillNameUsed = string.Empty;
+                    // Nothing to do this time, re-enqueue this state.
+                    battleStates.Enqueue(state);
+                }
+                else
+                {
+                    // Champion with the fullest turn meter takes a turn!
+                    IBattleParticipant maxTMChamp = state.BattleParticipants.First(bp => bp.TurnMeter == maxTurnMeter);
 
-                    ChampionInBattle maxTMChamp = null;
-                    foreach (ChampionInBattle champ in this.champions)
+                    IEnumerable<Skill> skillsToRun;
+                    Skill nextAISkill = maxTMChamp.NextAISkill();
+                    if (exploreAllSequences && state.BattleParticipants.Where(bp => bp.IsClanBoss).First().TurnCount < AutoAfterClanBossTurn)
                     {
-                        if (champ.TurnMeter == maxTurnMeter)
-                        {
-                            maxTMChamp = champ;
-                            break;
-                        }
-                    }
-
-                    if (maxTMChamp != null)
-                    {
-                        actorName = maxTMChamp.Champ.Name;
-                        // this.PrintTurnMeters();
-                        Skill skillUsed = maxTMChamp.NextAISkill();
-                        maxTMChamp.TakeTurn(skillUsed);
-                        skillIdUsed = skillUsed.Id;
-                        skillNameUsed = skillUsed.Name;
-                        TurnAction action = skillUsed.TurnAction;
-                        if (action.BuffsToApply != null)
-                        {
-                            foreach (BuffToApply buff in action.BuffsToApply)
-                            {
-                                if (buff.Target == Constants.Target.Self)
-                                {
-                                    maxTMChamp.ApplyBuff(buff);
-                                }
-                                else if (buff.Target == Constants.Target.AllAllies)
-                                {
-                                    foreach (ChampionInBattle cib in this.champions)
-                                    {
-                                        if (cib != maxTMChamp)
-                                        {
-                                            cib.ApplyBuff(buff);
-                                        }
-                                    }
-                                }
-                                else if (buff.Target == Constants.Target.FullTeam)
-                                {
-                                    foreach (ChampionInBattle cib in this.champions)
-                                    {
-                                        cib.ApplyBuff(buff);
-                                    }
-                                }
-                            }
-                        }
-
-                        if (action.DebuffsToApply != null)
-                        {
-                            foreach (DebuffToApply debuff in action.DebuffsToApply)
-                            {
-                                clanBoss.ApplyDebuff(debuff);
-                            }
-                        }
-
-                        if (action.EffectsToApply != null)
-                        {
-                            foreach (EffectToApply effect in action.EffectsToApply)
-                            {
-                                if (effect.Target == Constants.Target.Self)
-                                {
-                                    maxTMChamp.ApplyEffect(effect.Effect);
-                                }
-                                else if (effect.Target == Constants.Target.AllAllies)
-                                {
-                                    foreach (ChampionInBattle cib in this.champions)
-                                    {
-                                        if (cib != maxTMChamp)
-                                        {
-                                            cib.ApplyEffect(effect.Effect);
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        skillsToRun = maxTMChamp.AllAvailableSkills();
                     }
                     else
                     {
-                        actorName = Constants.Names.ClanBoss;
-                        // this.PrintTurnMeters();
-                        Skill skillUsed = this.clanBoss.NextAISkill();
-                        this.clanBoss.TakeTurn(skillUsed);
-                        skillIdUsed = skillUsed.Id;
-                        skillNameUsed = skillUsed.Name;
-                        TurnAction action = skillUsed.TurnAction;
-                        clanBossTurn++;
-
-                        if (action.AttackTarget == Constants.Target.AllEnemies)
-                        {
-                            foreach (ChampionInBattle cib in this.champions)
-                            {
-                                cib.GetAttacked(action.AttackCount);
-                                if (!cib.ActiveBuffs.ContainsKey(Constants.Buff.Unkillable))
-                                {
-                                    Console.WriteLine("!!!!!!!!!! {0} attacked but not unkillable !!!!!!!!", cib.Champ.Name);
-                                }
-                            }
-                        }
-                        else if (action.AttackTarget == Constants.Target.OneEnemy)
-                        {
-                            // TODO:  This is the stun.  Apply it to the slowest champion.
-                            ChampionInBattle slowboi = this.champions.First();
-                            foreach (ChampionInBattle cib in this.champions)
-                            {
-                                if (slowboi.Champ.EffectiveSpeed > cib.Champ.EffectiveSpeed)
-                                {
-                                    slowboi = cib;
-                                }
-                            }
-
-                            slowboi.GetAttacked(action.AttackCount);
-                            if (!slowboi.ActiveBuffs.ContainsKey(Constants.Buff.Unkillable))
-                            {
-                                Console.WriteLine("!!!!!!!!!! {0} attacked but not unkillable !!!!!!!!", slowboi.Champ.Name);
-                            }
-
-                            if (action.DebuffsToApply != null)
-                            {
-                                slowboi.ApplyDebuff(action.DebuffsToApply.First());
-                            }
-                        }
+                        skillsToRun = new List<Skill>() { maxTMChamp.NextAISkill() };
                     }
 
-                    List<ClanBossBattleResult.ChampionStats> champStats = new List<ClanBossBattleResult.ChampionStats>();
-                    foreach (ChampionInBattle cib in this.champions)
+                    CBBState currentState = state;
+                    foreach (Skill skill in skillsToRun)
                     {
-                        ClanBossBattleResult.ChampionStats champStat = new ClanBossBattleResult.ChampionStats(cib.Champ, cib.TurnMeter, new Dictionary<Constants.Buff, int>(cib.ActiveBuffs), new Dictionary<Constants.Debuff, int>(cib.ActiveDebuffs), new Dictionary<Constants.SkillId, int>(cib.SkillCooldowns));
-                        champStats.Add(champStat);
+                        state = new CBBState(currentState);
+                        IBattleParticipant champ = state.BattleParticipants.Where(bp => bp.Name == maxTMChamp.Name).First();
+                        List<IBattleParticipant> counterAttackers = new List<IBattleParticipant>();
+
+                        champ.TakeTurn(skill);
+
+                        if (!champ.IsClanBoss)
+                        {
+                            TurnAction action = skill.TurnAction;
+                            if (action.BuffsToApply != null)
+                            {
+                                foreach (BuffToApply buff in action.BuffsToApply)
+                                {
+                                    if (buff.Target == Constants.Target.Self)
+                                    {
+                                        champ.ApplyBuff(buff);
+                                    }
+                                    else if (buff.Target == Constants.Target.AllAllies)
+                                    {
+                                        foreach (IBattleParticipant bp in state.BattleParticipants.Where(p => !p.IsClanBoss && p != champ))
+                                        {
+                                            bp.ApplyBuff(buff);
+                                        }
+                                    }
+                                    else if (buff.Target == Constants.Target.FullTeam)
+                                    {
+                                        foreach (IBattleParticipant bp in state.BattleParticipants.Where(p => !p.IsClanBoss))
+                                        {
+                                            bp.ApplyBuff(buff);
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (action.EffectsToApply != null)
+                            {
+                                foreach (EffectToApply effect in action.EffectsToApply)
+                                {
+                                    if (effect.Target == Constants.Target.Self)
+                                    {
+                                        champ.ApplyEffect(effect.Effect);
+                                    }
+                                    else if (effect.Target == Constants.Target.AllAllies)
+                                    {
+                                        foreach (IBattleParticipant bp in state.BattleParticipants.Where(p => !p.IsClanBoss && p != champ))
+                                        {
+                                            bp.ApplyEffect(effect.Effect);
+                                        }
+                                    }
+                                }
+                            }
+
+                            battleStates.Enqueue(state);
+                        }
+                        else
+                        {
+                            // Clan boss turn!
+                            TurnAction action = skill.TurnAction;
+                            bool enqueueNewState = true;
+
+                            if (action.AttackTarget == Constants.Target.AllEnemies)
+                            {
+                                foreach (IBattleParticipant bp in state.BattleParticipants.Where(p => !p.IsClanBoss))
+                                {
+                                    bp.GetAttacked(action.AttackCount);
+                                    
+                                    if (bp.ActiveBuffs.ContainsKey(Constants.Buff.Counterattack) &&
+                                        !bp.ActiveDebuffs.ContainsKey(Constants.Debuff.Stun))
+                                    {
+                                        counterAttackers.Add(bp);
+                                    }
+
+                                    if (champ.TurnCount > LastKillableTurn && !bp.ActiveBuffs.ContainsKey(Constants.Buff.Unkillable))
+                                    {
+                                        enqueueNewState = !failOnKill;
+                                    }
+                                }
+                            }
+                            else if (action.AttackTarget == Constants.Target.OneEnemy)
+                            {
+                                IBattleParticipant stunTarget = this.GetStunTarget(state.BattleParticipants);
+
+                                stunTarget.GetAttacked(action.AttackCount);
+
+                                if (champ.TurnCount > LastKillableTurn && !stunTarget.ActiveBuffs.ContainsKey(Constants.Buff.Unkillable))
+                                {
+                                    enqueueNewState = !failOnKill;
+                                }
+
+                                if (action.DebuffsToApply != null)
+                                {
+                                    stunTarget.ApplyDebuff(action.DebuffsToApply.First());
+                                }
+
+                                if (stunTarget.ActiveBuffs.ContainsKey(Constants.Buff.Counterattack) &&
+                                    !stunTarget.ActiveDebuffs.ContainsKey(Constants.Debuff.Stun))
+                                {
+                                    counterAttackers.Add(stunTarget);
+                                }
+                            }
+
+                            foreach (IBattleParticipant bp in counterAttackers)
+                            {
+                                bp.Counterattack();
+                            }
+
+                            if (champ.TurnCount == MaxClanBossTurns)
+                            {
+                                // End of the run!
+                                enqueueNewState = false;
+                                returnResults = true;
+                            }
+
+                            if (enqueueNewState)
+                            {
+                                battleStates.Enqueue(state);
+                            }
+                        }
+
+                        List<ClanBossBattleResult.BattleParticipantStats> bpStats = new List<ClanBossBattleResult.BattleParticipantStats>();
+                        foreach (IBattleParticipant bp in state.BattleParticipants)
+                        {
+                            ClanBossBattleResult.BattleParticipantStats bpStat = new ClanBossBattleResult.BattleParticipantStats(bp.Name, bp.IsClanBoss, bp.TurnMeter, new Dictionary<Constants.Buff, int>(bp.ActiveBuffs), bp.GetSkillToCooldownMap());
+                            bpStats.Add(bpStat);
+                        }
+
+                        ClanBossBattleResult.Attack attackDetails = new ClanBossBattleResult.Attack(champ.Name, champ.TurnCount, maxTurnMeter, skill.Id, skill.Name, nextAISkill.Id);
+                        List<ClanBossBattleResult.Attack> counterattacks = new List<ClanBossBattleResult.Attack>();
+                        foreach (IBattleParticipant bp in counterAttackers)
+                        {
+                            counterattacks.Add(new ClanBossBattleResult.Attack(bp.Name, bp.TurnCount, bp.TurnMeter, Constants.SkillId.A1, bp.GetA1().Name, Constants.SkillId.A1));
+                        }
+
+                        ClanBossBattleResult result = new ClanBossBattleResult(state.BattleParticipants.First(p => p.IsClanBoss).TurnCount, attackDetails, bpStats, counterattacks);
+                        state.Results.Add(result);
+
+                        if (returnResults)
+                        {
+                            yield return state.Results;
+                        }
                     }
-
-                    ClanBossBattleResult.ClanBossStats cbStats = new ClanBossBattleResult.ClanBossStats(this.clanBoss.TurnMeter, new Dictionary<Constants.Buff, int>(this.clanBoss.ActiveBuffs), new Dictionary<Constants.Debuff, int>(this.clanBoss.ActiveDebuffs));
-
-                    ClanBossBattleResult result = new ClanBossBattleResult(clockTick, clanBossTurn, actorName, skillIdUsed, skillNameUsed, champStats, cbStats, null);
-                    results.Add(result);
                 }
             }
-
-            return results;*/
-            return null;
         }
-        /*
-        private void PrintTurnMeters()
+
+        private void PrintTurnMeters(CBBState state)
         {
-            foreach (ChampionInBattle cib in this.champions)
+            foreach (IBattleParticipant bp in state.BattleParticipants)
             {
-                Console.WriteLine("  Champion {0} turn meter {1}", cib.Champ.Name, cib.TurnMeter);
+                Console.WriteLine("  {0} turn meter {1}", bp.Name, bp.TurnMeter);
             }
-            Console.WriteLine("  Clan Boss turn meter {0}", this.clanBoss.TurnMeter);
-        }*/
+        }
     }
 }

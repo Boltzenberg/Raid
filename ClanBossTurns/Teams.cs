@@ -1,7 +1,9 @@
 ﻿using RaidLib.DataModel;
 using RaidLib.DataModel.Champions;
+using RaidLib.Simulator;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ClanBossTurns
 {
@@ -34,6 +36,51 @@ namespace ClanBossTurns
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateSkullcrusher(ClanBoss.Level level)
             {
                 return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Skullcrusher.Create(153, 0), Skullcrusher.AISkills, new List<Constants.SkillId>());
+            }
+
+            public static List<CreateChampion> ChampionCreators()
+            {
+                return new List<CreateChampion>()
+                {
+                    CreateFrozenBanshee,
+                    CreateSeptimus,
+                    CreateRhazinScarhide,
+                    CreateCoffinSmasher,
+                    CreateSkullcrusher
+                };
+            }
+        }
+
+        public static class ChilliNM
+        {
+            static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateFrozenBanshee(ClanBoss.Level level)
+            {
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(FrozenBanshee.Create(171, 0), FrozenBanshee.AISkills, new List<Constants.SkillId>());
+            }
+
+            static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateRhazinScarhide(ClanBoss.Level level)
+            {
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(RhazinScarhide.Create(171, 0), RhazinScarhide.AISkills, new List<Constants.SkillId>());
+            }
+
+            static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateSeptimus(ClanBoss.Level level)
+            {
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Septimus.Create(171, 0), Septimus.AISkills, new List<Constants.SkillId>());
+            }
+
+            static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateCoffinSmasher(ClanBoss.Level level)
+            {
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(CoffinSmasher.Create(171, 0), CoffinSmasher.AISkills, new List<Constants.SkillId>());
+            }
+
+            static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateSkullcrusher(ClanBoss.Level level)
+            {
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Skullcrusher.Create(170, 0), Skullcrusher.AISkills, new List<Constants.SkillId>());
+            }
+
+            public static IBattleParticipant GetStunTarget(List<IBattleParticipant> bps)
+            {
+                return bps.Where(bp => bp.Name == "Frozen Banshee").First();
             }
 
             public static List<CreateChampion> ChampionCreators()
@@ -272,11 +319,11 @@ namespace ClanBossTurns
             {
                 return new List<CreateChampion>()
                 {
-                    CreateManeater,
-                    CreatePainkeeper,
                     CreateFrozenBanshee,
                     CreateGravechillKiller,
-                    CreateBulwark
+                    CreateBulwark,
+                    CreateManeater,
+                    CreatePainkeeper
                 };
             }
         }

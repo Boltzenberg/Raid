@@ -194,6 +194,62 @@ namespace ClanBossTurns
             System.Diagnostics.Process.Start(filename);
         }
 
+        static void FixGungasTeam(ClanBoss.Level clanBossLevel)
+        {
+            List<Champion> champions = new List<Champion>();
+            List<ChampionInBattle> cibs = new List<ChampionInBattle>();
+            foreach (Teams.CreateChampion cc in Teams.Gunga.ChampionCreators())
+            {
+                Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> tuple = cc(clanBossLevel);
+                Champion c = tuple.Item1;
+                champions.Add(c);
+                if (c.Name == "Frozen Banshee")
+                {
+                    Console.WriteLine("{0}'s effective speed: {0}, Turn Meter Increment: {1}", c.Name, c.EffectiveSpeed, Constants.TurnMeter.DeltaPerTurn(c.EffectiveSpeed));
+                    c = c.Clone(-10, 0);
+                    Console.WriteLine("{0}'s new effective speed: {0}, Turn Meter Increment: {1}", c.Name, c.EffectiveSpeed, Constants.TurnMeter.DeltaPerTurn(c.EffectiveSpeed));
+                }
+                else if (c.Name == "Gravechill Killer")
+                {
+                    Console.WriteLine("{0}'s effective speed: {0}, Turn Meter Increment: {1}", c.Name, c.EffectiveSpeed, Constants.TurnMeter.DeltaPerTurn(c.EffectiveSpeed));
+                    c = c.Clone(-9, 0);
+                    Console.WriteLine("{0}'s new effective speed: {0}, Turn Meter Increment: {1}", c.Name, c.EffectiveSpeed, Constants.TurnMeter.DeltaPerTurn(c.EffectiveSpeed));
+                }
+                cibs.Add(new ChampionInBattle(c, tuple.Item2, tuple.Item3));
+            }
+
+            ClanBossBattle battle = new ClanBossBattle(clanBossLevel, cibs);
+            List<ClanBossBattleResult> results = battle.Run();
+
+            int lastKillableTurn = ClanBossBattleResultsAnalysis.LastClanBossTurnThatHitKillableChampion(results, Utils.FindSlowestChampion(champions));
+            if (lastKillableTurn > 4)
+            {
+                Console.WriteLine("Not unkillable!");
+                return;
+            }
+
+            ClanBossBattleResultsAnalysis.PrintResults(results, false, true);
+
+            for (int i = 0; i < results.Count; i++)
+            {
+                if (results[i].AttackDetails.ActorName == "Painkeeper" &&
+                    results[i].AttackDetails.Skill == Constants.SkillId.A3)
+                {
+                    if (results[i-1].AttackDetails.ActorName == "Frozen Banshee" &&
+                        results[i-1].AttackDetails.Skill == Constants.SkillId.A1)
+                    {
+                        if (results[i-2].AttackDetails.ActorName == Constants.Names.ClanBoss &&
+                            results[i-2].AttackDetails.Skill == Constants.SkillId.A1)
+                        {
+                            Console.WriteLine("Got a hit after CB turn {0}!  PK TM on FB turn: {1}, FB TM: {2}", results[i].ClanBossTurn, results[i-1].BattleParticipants.Where(bp => bp.Name == "Painkeeper").First().TurnMeter, results[i-1].AttackDetails.ActorTurnMeter);
+                        }
+                    }
+                }
+            }
+
+            Console.ReadLine();
+        }
+
         static void Main(string[] args)
         {
             //RunUnkillableSearcher(ClanBoss.Level.Brutal, Teams.UnkillableBase.ChampionCreators());
@@ -201,11 +257,12 @@ namespace ClanBossTurns
             //SearchForUnkillableSpeeds(ClanBoss.Level.Nightmare, Teams.Gunga.ChampionCreators());
             //SearchForUnkillableSpeeds(ClanBoss.Level.UltraNightmare, Teams.Gunga.ChampionCreators());
             //TestClanBossRun(ClanBoss.Level.Nightmare, Teams.Gunga.ChampionCreators());
-            //TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, Teams.Rust.ChampionCreators(), true);
-            TestCounterattackTeam(ClanBoss.Level.Nightmare, Teams.Chilli.ChampionCreators());
+            //TestUnkillableClanBossRun(ClanBoss.Level.Nightmare, Teams.Gunga.ChampionCreators(), false);
+            //TestCounterattackTeam(ClanBoss.Level.Nightmare, Teams.ChilliNM.ChampionCreators(), Teams.ChilliNM.GetStunTarget);
+            FixGungasTeam(ClanBoss.Level.Nightmare);
         }
 
-        static void TestCounterattackTeam(ClanBoss.Level clanBossLevel, List<Teams.CreateChampion> championCreators)
+        static void TestCounterattackTeam(ClanBoss.Level clanBossLevel, List<Teams.CreateChampion> championCreators, ClanBossBattle.StunTargetExtractor getStunTarget)
         {
             List<Champion> champions = new List<Champion>();
             Dictionary<Champion, Tuple<List<Constants.SkillId>, List<Constants.SkillId>>> skillPoliciesByChampion = new Dictionary<Champion, Tuple<List<Constants.SkillId>, List<Constants.SkillId>>>();
@@ -216,21 +273,11 @@ namespace ClanBossTurns
                 skillPoliciesByChampion[tuple.Item1] = new Tuple<List<Constants.SkillId>, List<Constants.SkillId>>(tuple.Item2, tuple.Item3);
             }
 
-            UnkillableClanBossBattle baseline = new UnkillableClanBossBattle(clanBossLevel, skillPoliciesByChampion);
-            List<ClanBossBattleResult> results = baseline.Run();
+            ClanBossBattle battle = new ClanBossBattle(clanBossLevel, skillPoliciesByChampion);
+            battle.GetStunTarget = getStunTarget;
 
-            foreach (ClanBossBattleResult result in results)
-            {
-                Console.WriteLine("{0,2}: {1,20} turn {2,2} use skill {3} ({4,20})", result.ClanBossTurn, result.AttackDetails.ActorName, result.AttackDetails.ActorTurn, result.AttackDetails.Skill, result.AttackDetails.SkillName);
-                if (result.Counterattacks != null)
-                {
-                    foreach (ClanBossBattleResult.Attack ca in result.Counterattacks)
-                    {
-                        Console.WriteLine("    {0,20} counterattacks for turn {1,2}", ca.ActorName, ca.ActorTurn);
-                    }
-                }
-            }
-
+            List<ClanBossBattleResult> results = battle.Run();
+            ClanBossBattleResultsAnalysis.PrintResults(results, false, false);
             Console.ReadLine();
         }
 
@@ -245,10 +292,10 @@ namespace ClanBossTurns
                 skillPoliciesByChampion[tuple.Item1] = new Tuple<List<Constants.SkillId>, List<Constants.SkillId>>(tuple.Item2, tuple.Item3);
             }
 
-            UnkillableClanBossBattle baseline = new UnkillableClanBossBattle(clanBossLevel, skillPoliciesByChampion);
+            ClanBossBattle baseline = new ClanBossBattle(clanBossLevel, skillPoliciesByChampion);
             List<ClanBossBattleResult> baselineResult = baseline.Run();
 
-            UnkillableClanBossBattle battle = new UnkillableClanBossBattle(clanBossLevel, skillPoliciesByChampion);
+            ClanBossBattle battle = new ClanBossBattle(clanBossLevel, skillPoliciesByChampion);
             IEnumerable<List<ClanBossBattleResult>> resultSet;
             if (startupSequenceSearch)
             {
@@ -266,9 +313,10 @@ namespace ClanBossTurns
                 int autoAfterCBTurn = 0;
                 Console.WriteLine();
                 Console.WriteLine("Run is over!");
+                ClanBossBattleResultsAnalysis.PrintResults(results, true, false);
+
                 foreach (ClanBossBattleResult result in results)
                 {
-                    Console.WriteLine("{0,2}: {1,20} turn {2,2} use skill {3} ({4})", result.ClanBossTurn, result.AttackDetails.ActorName, result.AttackDetails.ActorTurn, result.AttackDetails.Skill, result.AttackDetails.SkillName);
                     if (result.AttackDetails.ActorName != Constants.Names.ClanBoss)
                     {
                         if (result.AttackDetails.ExpectedAISkill != result.AttackDetails.Skill)
@@ -277,12 +325,12 @@ namespace ClanBossTurns
                         }
                     }
                 }
+
                 int lastKillableTurn = ClanBossBattleResultsAnalysis.LastClanBossTurnThatHitKillableChampion(results, Utils.FindSlowestChampion(champions));
 
                 Console.WriteLine("Last turn where there was a hit on a champion that wasn't unkillable:  {0}", lastKillableTurn);
                 Console.WriteLine("This setup runs on auto after turn {0}", autoAfterCBTurn);
                 Console.WriteLine();
-                //Console.ReadLine();
                 if (optimalAutoAfterCBTurn > autoAfterCBTurn)
                 {
                     optimalAutoAfterCBTurn = autoAfterCBTurn;
@@ -293,13 +341,8 @@ namespace ClanBossTurns
             if (optimalResults != null)
             {
                 Console.WriteLine("Optimal Result:");
-                foreach (ClanBossBattleResult result in optimalResults)
-                {
-                    Console.WriteLine("{0,2}: {1,20} turn {2,2} use skill {3} ({4,20}) - Unkillable Champs: {5}", result.ClanBossTurn, result.AttackDetails.ActorName, result.AttackDetails.ActorTurn, result.AttackDetails.Skill, result.AttackDetails.SkillName, string.Join(", ", result.BattleParticipants.Where(p => !p.IsClanBoss && p.ActiveBuffs.ContainsKey(Constants.Buff.Unkillable)).Select(p => p.Name)));
-                }
-                int lastKillableTurn = ClanBossBattleResultsAnalysis.LastClanBossTurnThatHitKillableChampion(optimalResults, Utils.FindSlowestChampion(champions));
+                ClanBossBattleResultsAnalysis.PrintResults(optimalResults, true, false);
 
-                Console.WriteLine("Last turn where there was a hit on a champion that wasn't unkillable:  {0}", lastKillableTurn);
                 Console.WriteLine("This setup runs on auto after turn {0}", optimalAutoAfterCBTurn);
 
                 Console.WriteLine();

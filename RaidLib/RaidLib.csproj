@@ -62,7 +62,6 @@
     <Compile Include="DataModel\TurnAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Simulator\IBattleParticipant.cs" />
-    <Compile Include="Simulator\UnkillableClanBossBattle.cs" />
     <Compile Include="Simulator\ClanBossBattle.cs" />
     <Compile Include="Simulator\ChampionInBattle.cs" />
     <Compile Include="Simulator\ClanBossBattleResult.cs" />
