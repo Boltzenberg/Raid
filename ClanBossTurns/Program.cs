@@ -149,8 +149,8 @@ namespace ClanBossTurns
             //SearchForUnkillableSpeeds(ClanBoss.Level.Nightmare, Teams.Gunga.ChampionCreators());
             //SearchForUnkillableSpeeds(ClanBoss.Level.UltraNightmare, Teams.Gunga.ChampionCreators());
             //TestClanBossRun(ClanBoss.Level.Nightmare, Teams.Gunga.ChampionCreators());
-            //TestUnkillableClanBossRun(ClanBoss.Level.Nightmare, Teams.Gunga.ChampionCreators(), false);
-            TestCounterattackTeam(ClanBoss.Level.Nightmare, Teams.ChilliNM.ChampionCreators(), Teams.ChilliNM.GetStunTarget);
+            TestUnkillableClanBossRun(ClanBoss.Level.Nightmare, Teams.Gunga.ChampionCreators(), false);
+            //TestCounterattackTeam(ClanBoss.Level.Nightmare, Teams.ChilliNM.ChampionCreators(), Teams.ChilliNM.GetStunTarget);
         }
 
         static void TestCounterattackTeam(ClanBoss.Level clanBossLevel, List<Teams.CreateChampion> championCreators, ClanBossBattle.StunTargetExtractor getStunTarget)

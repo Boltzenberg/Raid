@@ -305,6 +305,11 @@ namespace ClanBossTurns
                 return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(FrozenBanshee.Create(169, 0, 0), FrozenBanshee.AISkills, new List<Constants.SkillId>());
             }
 
+            static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateRhazinScarhide(ClanBoss.Level level)
+            {
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(RhazinScarhide.Create(170, 0, 1), RhazinScarhide.AISkills, new List<Constants.SkillId>());
+            }
+
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateGravechillKiller(ClanBoss.Level level)
             {
                 return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(GravechillKiller.Create(168, 0, 0), GravechillKiller.AISkills, new List<Constants.SkillId>());
@@ -319,8 +324,9 @@ namespace ClanBossTurns
             {
                 return new List<CreateChampion>()
                 {
+                    CreateRhazinScarhide,
                     CreateFrozenBanshee,
-                    CreateGravechillKiller,
+                    //CreateGravechillKiller,
                     CreateBulwark,
                     CreateManeater,
                     CreatePainkeeper
