@@ -15,27 +15,27 @@ namespace ClanBossTurns
         {
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateFrozenBanshee(ClanBoss.Level level)
             {
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(FrozenBanshee.Create(156, 0), FrozenBanshee.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(FrozenBanshee.Create(156, 0, 0), FrozenBanshee.AISkills, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateRhazinScarhide(ClanBoss.Level level)
             {
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(RhazinScarhide.Create(149, 0), RhazinScarhide.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(RhazinScarhide.Create(149, 0, 0), RhazinScarhide.AISkills, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateSeptimus(ClanBoss.Level level)
             {
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Septimus.Create(151, 0), Septimus.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Septimus.Create(151, 0, 0), Septimus.AISkills, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateCoffinSmasher(ClanBoss.Level level)
             {
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(CoffinSmasher.Create(96, 0), CoffinSmasher.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(CoffinSmasher.Create(96, 0, 0), CoffinSmasher.AISkills, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateSkullcrusher(ClanBoss.Level level)
             {
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Skullcrusher.Create(153, 0), Skullcrusher.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Skullcrusher.Create(153, 0, 0), Skullcrusher.AISkills, new List<Constants.SkillId>());
             }
 
             public static List<CreateChampion> ChampionCreators()
@@ -55,27 +55,27 @@ namespace ClanBossTurns
         {
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateFrozenBanshee(ClanBoss.Level level)
             {
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(FrozenBanshee.Create(171, 0), FrozenBanshee.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(FrozenBanshee.Create(171, 0, 0), FrozenBanshee.AISkills, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateRhazinScarhide(ClanBoss.Level level)
             {
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(RhazinScarhide.Create(171, 0), RhazinScarhide.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(RhazinScarhide.Create(171, 0, 0), RhazinScarhide.AISkills, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateSeptimus(ClanBoss.Level level)
             {
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Septimus.Create(171, 0), Septimus.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Septimus.Create(171, 0, 0), Septimus.AISkills, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateCoffinSmasher(ClanBoss.Level level)
             {
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(CoffinSmasher.Create(171, 0), CoffinSmasher.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(CoffinSmasher.Create(171, 0, 0), CoffinSmasher.AISkills, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateSkullcrusher(ClanBoss.Level level)
             {
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Skullcrusher.Create(170, 0), Skullcrusher.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Skullcrusher.Create(170, 0, 0), Skullcrusher.AISkills, new List<Constants.SkillId>());
             }
 
             public static IBattleParticipant GetStunTarget(List<IBattleParticipant> bps)
@@ -106,7 +106,7 @@ namespace ClanBossTurns
                     Constants.SkillId.A1,
                 };
 
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Maneater.Create(254, 0), skillsToUse, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Maneater.Create(254, 0, 0), skillsToUse, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreatePainkeeper(ClanBoss.Level level)
@@ -118,13 +118,13 @@ namespace ClanBossTurns
                     Constants.SkillId.A1,
                 };
 
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Painkeeper.Create(227, 0), skillsToUse, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Painkeeper.Create(227, 0, 0), skillsToUse, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateDPS1(ClanBoss.Level level)
             {
                 return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(
-                    new Champion("DPS1", 185, 185, 0, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
+                    new Champion("DPS1", 185, 185, 0, 0, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
                     new List<Constants.SkillId>() { Constants.SkillId.A1 },
                     new List<Constants.SkillId>());
             }
@@ -132,7 +132,7 @@ namespace ClanBossTurns
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateDPS2(ClanBoss.Level level)
             {
                 return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(
-                    new Champion("DPS2", 185, 185, 0, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
+                    new Champion("DPS2", 185, 185, 0, 0, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
                     new List<Constants.SkillId>() { Constants.SkillId.A1 },
                     new List<Constants.SkillId>());
             }
@@ -140,7 +140,7 @@ namespace ClanBossTurns
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateSlowboi(ClanBoss.Level level)
             {
                 return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(
-                    new Champion("Slowboi", 128, 128, 0, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
+                    new Champion("Slowboi", 128, 128, 0, 0, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
                     new List<Constants.SkillId>() { Constants.SkillId.A1 },
                     new List<Constants.SkillId>());
             }
@@ -168,7 +168,7 @@ namespace ClanBossTurns
                     Constants.SkillId.A1,
                 };
 
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Maneater.Create(227, 2), skillsToUse, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Maneater.Create(227, 2, 0), skillsToUse, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreatePainkeeper(ClanBoss.Level level)
@@ -180,13 +180,13 @@ namespace ClanBossTurns
                     Constants.SkillId.A1,
                 };
 
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Painkeeper.Create(213, 2), skillsToUse, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Painkeeper.Create(213, 2, 0), skillsToUse, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateDPS1(ClanBoss.Level level)
             {
                 return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(
-                    new Champion("DPS1", 169, 169, 0, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
+                    new Champion("DPS1", 169, 169, 0, 0, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
                     new List<Constants.SkillId>() { Constants.SkillId.A1 },
                     new List<Constants.SkillId>());
             }
@@ -194,7 +194,7 @@ namespace ClanBossTurns
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateDPS2(ClanBoss.Level level)
             {
                 return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(
-                    new Champion("DPS2", 169, 169, 0, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
+                    new Champion("DPS2", 169, 169, 0, 0, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
                     new List<Constants.SkillId>() { Constants.SkillId.A1 },
                     new List<Constants.SkillId>());
             }
@@ -202,7 +202,7 @@ namespace ClanBossTurns
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateSlowboi(ClanBoss.Level level)
             {
                 return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(
-                    new Champion("Slowboi", 106, 106, 0, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
+                    new Champion("Slowboi", 106, 106, 0, 0, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
                     new List<Constants.SkillId>() { Constants.SkillId.A1 },
                     new List<Constants.SkillId>());
             }
@@ -230,7 +230,7 @@ namespace ClanBossTurns
                     Constants.SkillId.A1,
                 };
 
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Maneater.Create(240, 3), skillsToUse, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Maneater.Create(240, 3, 0), skillsToUse, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreatePainkeeper(ClanBoss.Level level)
@@ -242,13 +242,13 @@ namespace ClanBossTurns
                     Constants.SkillId.A1,
                 };
 
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Painkeeper.Create(221, 3), skillsToUse, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Painkeeper.Create(221, 3, 0), skillsToUse, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateDPS1(ClanBoss.Level level)
             {
                 return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(
-                    new Champion("DPS1", 91, 177, 1, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
+                    new Champion("DPS1", 91, 177, 1, 0, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
                     new List<Constants.SkillId>() { Constants.SkillId.A1 },
                     new List<Constants.SkillId>());
             }
@@ -256,7 +256,7 @@ namespace ClanBossTurns
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateDPS2(ClanBoss.Level level)
             {
                 return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(
-                    new Champion("DPS2", 102, 175, 2, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
+                    new Champion("DPS2", 102, 175, 2, 0, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
                     new List<Constants.SkillId>() { Constants.SkillId.A1 },
                     new List<Constants.SkillId>());
             }
@@ -264,7 +264,7 @@ namespace ClanBossTurns
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateSlowboi(ClanBoss.Level level)
             {
                 return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(
-                    new Champion("Slowboi", 92, 114, 1, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
+                    new Champion("Slowboi", 92, 114, 1, 0, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) }),
                     new List<Constants.SkillId>() { Constants.SkillId.A1 },
                     new List<Constants.SkillId>());
             }
@@ -286,7 +286,7 @@ namespace ClanBossTurns
         {
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateManeater(ClanBoss.Level level)
             {
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Maneater.Create(227, 2), Maneater.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Maneater.Create(227, 2, 0), Maneater.AISkills, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreatePainkeeper(ClanBoss.Level level)
@@ -297,22 +297,22 @@ namespace ClanBossTurns
                     Constants.SkillId.A1,
                 };
 
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Painkeeper.Create(213, 2), Painkeeper.AISkills, startupSkillOrder);
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Painkeeper.Create(213, 2, 0), Painkeeper.AISkills, startupSkillOrder);
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateFrozenBanshee(ClanBoss.Level level)
             {
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(FrozenBanshee.Create(169, 0), FrozenBanshee.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(FrozenBanshee.Create(169, 0, 0), FrozenBanshee.AISkills, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateGravechillKiller(ClanBoss.Level level)
             {
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(GravechillKiller.Create(168, 0), GravechillKiller.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(GravechillKiller.Create(168, 0, 0), GravechillKiller.AISkills, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateBulwark(ClanBoss.Level level)
             {
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Bulwark.Create(106, 0), Bulwark.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Bulwark.Create(106, 0, 0), Bulwark.AISkills, new List<Constants.SkillId>());
             }
 
             public static List<CreateChampion> ChampionCreators()
@@ -332,7 +332,7 @@ namespace ClanBossTurns
         {
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateManeater(ClanBoss.Level level)
             {
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Maneater.Create(98 + 143, 3), Maneater.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Maneater.Create(98 + 143, 3, 0), Maneater.AISkills, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreatePainkeeper(ClanBoss.Level level)
@@ -343,22 +343,22 @@ namespace ClanBossTurns
                     Constants.SkillId.A1,
                 };
 
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Painkeeper.Create(102 + 119, 1), Painkeeper.AISkills, startupSkillOrder);
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Painkeeper.Create(102 + 119, 1, 0), Painkeeper.AISkills, startupSkillOrder);
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateFrozenBanshee(ClanBoss.Level level)
             {
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(FrozenBanshee.Create(99 + 78, 0), FrozenBanshee.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(FrozenBanshee.Create(99 + 78, 0, 0), FrozenBanshee.AISkills, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateOccultBrawler(ClanBoss.Level level)
             {
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(OccultBrawler.Create(98 + 77, 0), OccultBrawler.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(OccultBrawler.Create(98 + 77, 0, 0), OccultBrawler.AISkills, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateAothar(ClanBoss.Level level)
             {
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Aothar.Create(92 + 24, 0), Aothar.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Aothar.Create(92 + 24, 0, 0), Aothar.AISkills, new List<Constants.SkillId>());
             }
 
             public static List<CreateChampion> ChampionCreators()
@@ -412,7 +412,7 @@ namespace ClanBossTurns
                         throw new ArgumentException("Only works for Brutal, Nightmare, or UltraNightmare");
                 }
 
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Maneater.Create(240, 3), Maneater.AISkills, startupSkillOrder);
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Maneater.Create(240, 3, 0), Maneater.AISkills, startupSkillOrder);
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreatePainkeeper(ClanBoss.Level level)
@@ -451,7 +451,7 @@ namespace ClanBossTurns
                         throw new ArgumentException("Only works for Brutal, Nightmare, or UltraNightmare");
                 }
 
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Painkeeper.Create(221, 3), Painkeeper.AISkills, startupSkillOrder);
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Painkeeper.Create(221, 3, 0), Painkeeper.AISkills, startupSkillOrder);
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateAothar(ClanBoss.Level level)
@@ -462,17 +462,17 @@ namespace ClanBossTurns
                     uiSpeed = 121;
                 }
 
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Aothar.Create(uiSpeed, 1), Aothar.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Aothar.Create(uiSpeed, 1, 0), Aothar.AISkills, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateRhazinScarhide(ClanBoss.Level level)
             {
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(RhazinScarhide.Create(177, 1), RhazinScarhide.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(RhazinScarhide.Create(177, 1, 0), RhazinScarhide.AISkills, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateSeptimus(ClanBoss.Level level)
             {
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Septimus.Create(175, 2), Septimus.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Septimus.Create(175, 2, 0), Septimus.AISkills, new List<Constants.SkillId>());
             }
 
             public static List<CreateChampion> ChampionCreators()

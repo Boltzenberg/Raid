@@ -9,7 +9,7 @@ namespace RaidLib.DataModel.Champions
 {
     public static class Painkeeper
     {
-        public static Champion Create(int uiSpeed, int speedSets)
+        public static Champion Create(int uiSpeed, int speedSets, int perceptionSets)
         {
             List<Skill> skills = new List<Skill>();
             skills.Add(new Skill(
@@ -24,7 +24,7 @@ namespace RaidLib.DataModel.Champions
                 4,
                 new TurnAction(0, Constants.Target.None, new List<EffectToApply>() { new EffectToApply(Constants.Effect.ReduceSkillCooldownBy1, Constants.Target.AllAllies, Constants.TimeInTurn.End) }, null, null)));
 
-            return new Champion("Painkeeper", 102, uiSpeed, speedSets, skills);
+            return new Champion("Painkeeper", 102, uiSpeed, speedSets, perceptionSets, skills);
         }
 
         public static List<Constants.SkillId> AISkills

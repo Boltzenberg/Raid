@@ -8,14 +8,14 @@ namespace RaidLib.DataModel.Champions
 {
     public static class Bulwark
     {
-        public static Champion Create(int uiSpeed, int speedSets)
+        public static Champion Create(int uiSpeed, int speedSets, int perceptionSets)
         {
             List<Skill> skills = new List<Skill>();
             skills.Add(new Skill("Hefty Flail", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()));
             skills.Add(new Skill("Meteoric Ignition", Constants.SkillId.A2, 3, TurnAction.AttackOneEnemy()));
             skills.Add(new Skill("Punishing Defense", Constants.SkillId.P1, 0, TurnAction.AttackOneEnemy()));
 
-            return new Champion("Bulwark", 97, uiSpeed, speedSets, skills);
+            return new Champion("Bulwark", 97, uiSpeed, speedSets, perceptionSets, skills);
         }
 
         public static List<Constants.SkillId> AISkills

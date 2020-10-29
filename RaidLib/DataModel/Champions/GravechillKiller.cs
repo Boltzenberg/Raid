@@ -8,14 +8,14 @@ namespace RaidLib.DataModel.Champions
 {
     public static class GravechillKiller
     {
-        public static Champion Create(int uiSpeed, int speedSets)
+        public static Champion Create(int uiSpeed, int speedSets, int perceptionSets)
         {
             List<Skill> skills = new List<Skill>();
             skills.Add(new Skill("Freezing Toxin", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()));
             skills.Add(new Skill("Blood Chill", Constants.SkillId.A2, 3, TurnAction.AttackOneEnemy()));
             skills.Add(new Skill("Icy Veins", Constants.SkillId.A3, 3, TurnAction.AttackOneEnemy()));
 
-            return new Champion("Gravechill Killer", 96, uiSpeed, speedSets, skills);
+            return new Champion("Gravechill Killer", 96, uiSpeed, speedSets, perceptionSets, skills);
         }
 
         public static List<Constants.SkillId> AISkills

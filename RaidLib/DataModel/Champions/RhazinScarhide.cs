@@ -9,14 +9,14 @@ namespace RaidLib.DataModel.Champions
 {
     public static class RhazinScarhide
     {
-        public static Champion Create(int uiSpeed, int speedSets)
+        public static Champion Create(int uiSpeed, int speedSets, int perceptionSets)
         {
             List<Skill> skills = new List<Skill>();
             skills.Add(new Skill("Bone Sword", Constants.SkillId.A1, 0, new TurnAction(3, Constants.Target.OneEnemy, null, null, null)));
             skills.Add(new Skill("Shear", Constants.SkillId.A2, 3, TurnAction.AttackOneEnemy()));
             skills.Add(new Skill("Bog Down", Constants.SkillId.A3, 6, TurnAction.AttackAllEnemies()));
 
-            return new Champion("Rhazin Scarhide", 91, uiSpeed, speedSets, skills);
+            return new Champion("Rhazin Scarhide", 91, uiSpeed, speedSets, perceptionSets, skills);
         }
 
         public static List<Constants.SkillId> AISkills

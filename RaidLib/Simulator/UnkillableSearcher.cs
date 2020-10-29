@@ -10,7 +10,21 @@ namespace RaidLib.Simulator
 {
     public class UnkillableSearcher
     {
-        private List<Tuple<int, int>> deltasToApply;
+        private class Delta
+        {
+            public int Speed { get; private set; }
+            public int SpeedSets { get; private set; }
+            public int PerceptionSets { get; private set; }
+
+            public Delta(int speed, int speedSets, int perceptionSets)
+            {
+                this.Speed = speed;
+                this.SpeedSets = speedSets;
+                this.PerceptionSets = perceptionSets;
+            }
+        }
+
+        private List<Delta> deltasToApply;
         private List<Champion> champions;
         private Dictionary<string, Tuple<List<Constants.SkillId>, List<Constants.SkillId>>> skillPoliciesByChampionName;
 
@@ -23,14 +37,17 @@ namespace RaidLib.Simulator
                 this.skillPoliciesByChampionName[c.Name] = skillPoliciesByChampionBase[c];
             }
 
-            this.deltasToApply = new List<Tuple<int, int>>();
+            this.deltasToApply = new List<Delta>();
             for (int flip = -1, speedDelta = 0, i = 0; i <=20; i++)
             {
                 flip = flip * -1;
                 speedDelta += (flip * i);
                 for (int speedSets = 0; speedSets <= 3; speedSets++)
                 {
-                    deltasToApply.Add(new Tuple<int, int>(speedDelta, speedSets));
+                    for (int perceptionSets = 0; perceptionSets <= 3 - speedSets; perceptionSets++)
+                    {
+                        deltasToApply.Add(new Delta(speedDelta, speedSets, perceptionSets));
+                    }
                 }
             }
         }
@@ -72,10 +89,10 @@ namespace RaidLib.Simulator
             src.RemoveAt(0);
             foreach (List<Champion> result in this.GetChampionLists(src))
             {
-                // Apply every version of c;
-                foreach (Tuple<int, int> deltas in this.deltasToApply)
+                // Apply every version of c
+                foreach (Delta delta in this.deltasToApply)
                 {
-                    Champion clone = c.Clone(deltas.Item1, deltas.Item2);
+                    Champion clone = c.Clone(delta.Speed, delta.SpeedSets, delta.PerceptionSets);
                     if (clone.EffectiveSpeed < clone.BaseSpeed)
                     {
                         continue;

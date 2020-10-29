@@ -8,7 +8,7 @@ namespace RaidLib.DataModel.Champions
 {
     public static class Maneater
     {
-        public static Champion Create(int uiSpeed, int speedSets)
+        public static Champion Create(int uiSpeed, int speedSets, int perceptionSets)
         {
             List<Skill> skills = new List<Skill>();
             skills.Add(new Skill("Pummel", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()));
@@ -27,7 +27,7 @@ namespace RaidLib.DataModel.Champions
                     },
                 null)));
 
-            return new Champion("Maneater", 98, uiSpeed, speedSets, skills);
+            return new Champion("Maneater", 98, uiSpeed, speedSets, perceptionSets, skills);
         }
 
         public static List<Constants.SkillId> AISkills

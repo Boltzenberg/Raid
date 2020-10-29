@@ -8,14 +8,14 @@ namespace RaidLib.DataModel.Champions
 {
     public static class Septimus
     {
-        public static Champion Create(int uiSpeed, int speedSets)
+        public static Champion Create(int uiSpeed, int speedSets, int perceptionSets)
         {
             List<Skill> skills = new List<Skill>();
             skills.Add(new Skill("Behead", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()));
             skills.Add(new Skill("Holy Sword", Constants.SkillId.A2, 4, TurnAction.AttackOneEnemy()));
             skills.Add(new Skill("Giant Killer", Constants.SkillId.P1, 0, TurnAction.AttackOneEnemy()));
 
-            return new Champion("Septimus", 102, uiSpeed, speedSets, skills);
+            return new Champion("Septimus", 102, uiSpeed, speedSets, perceptionSets, skills);
         }
 
         public static List<Constants.SkillId> AISkills

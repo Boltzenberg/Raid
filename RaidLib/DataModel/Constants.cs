@@ -16,6 +16,7 @@ namespace RaidLib.DataModel
         public static class SetBonus
         {
             public const double Speed = 0.12d;
+            public const double Perception = 0.05d;
         }
 
         public enum SkillId
