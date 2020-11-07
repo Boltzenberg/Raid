@@ -38,7 +38,7 @@ namespace RaidLib.Simulator
             }
 
             this.deltasToApply = new List<Delta>();
-            for (int flip = -1, speedDelta = 0, i = 0; i <=20; i++)
+            for (int flip = -1, speedDelta = 0, i = 0; i <=10; i++)
             {
                 flip = flip * -1;
                 speedDelta += (flip * i);

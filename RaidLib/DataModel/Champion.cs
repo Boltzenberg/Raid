@@ -9,6 +9,8 @@ namespace RaidLib.DataModel
 {
     public class Champion
     {
+        public delegate Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateChampion(ClanBoss.Level level);
+
         public Champion(string name, int baseSpeed, int uiSpeed, int speedSets, int perceptionSets, List<Skill> skills)
         {
             this.Name = name;
@@ -21,6 +23,18 @@ namespace RaidLib.DataModel
             double setSpeedBoost = (baseSpeed * speedSets * Constants.SetBonus.Speed) + (baseSpeed * perceptionSets * Constants.SetBonus.Perception);
             int artifactSpeed = uiSpeed - baseSpeed - (int)Math.Round(setSpeedBoost);
             this.EffectiveSpeed = baseSpeed + artifactSpeed + setSpeedBoost;
+        }
+
+        public Champion(string name, double effectiveSpeed, List<Skill> skills)
+        {
+            this.Name = name;
+            this.Skills = skills;
+            this.EffectiveSpeed = effectiveSpeed;
+
+            this.BaseSpeed = 0;
+            this.UISpeed = 0;
+            this.SpeedSets = 0;
+            this.PerceptionSets = 0;
         }
 
         public Champion Clone(int uiSpeedDelta, int speedSets, int perceptionSets)
@@ -37,6 +51,16 @@ namespace RaidLib.DataModel
                 speedSets == -1 ? this.SpeedSets : speedSets,
                 perceptionSets == -1 ? this.PerceptionSets : perceptionSets,
                 this.Skills);
+        }
+
+        public Champion Clone(double effectiveSpeedDelta)
+        {
+            if (effectiveSpeedDelta == 0.0d)
+            {
+                return this;
+            }
+
+            return new Champion(this.Name, this.EffectiveSpeed + effectiveSpeedDelta, this.Skills);
         }
 
         public string Name { get; private set; }

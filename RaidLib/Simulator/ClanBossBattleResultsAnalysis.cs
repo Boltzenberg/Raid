@@ -1,4 +1,5 @@
 ﻿using RaidLib.DataModel;
+using RaidLib.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,14 @@ namespace RaidLib.Simulator
 {
     public static class ClanBossBattleResultsAnalysis
     {
+        public static void PrintSummary(List<ClanBossBattleResult> results, Champion stunTarget, bool includeUnkillable, bool includeTM)
+        {
+            ClanBossBattleResultsAnalysis.PrintResults(results, true, false);
+            int lastKillableTurn = ClanBossBattleResultsAnalysis.LastClanBossTurnThatHitKillableChampion(results, stunTarget);
+            Console.WriteLine("Last turn where there was a hit on a champion that wasn't unkillable:  {0}", lastKillableTurn);
+            Console.WriteLine();
+        }
+
         public static void PrintResults(List<ClanBossBattleResult> results, bool includeUnkillable, bool includeTM)
         {
             foreach (ClanBossBattleResult result in results)
