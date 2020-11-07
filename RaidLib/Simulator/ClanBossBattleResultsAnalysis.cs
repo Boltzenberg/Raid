@@ -15,7 +15,43 @@ namespace RaidLib.Simulator
             ClanBossBattleResultsAnalysis.PrintResults(results, true, false);
             int lastKillableTurn = ClanBossBattleResultsAnalysis.LastClanBossTurnThatHitKillableChampion(results, stunTarget);
             Console.WriteLine("Last turn where there was a hit on a champion that wasn't unkillable:  {0}", lastKillableTurn);
-            Console.WriteLine();
+            PrintAttacksPerChampion(results);
+        }
+
+        public static void PrintAttacksPerChampion(List<ClanBossBattleResult> results)
+        {
+            Dictionary<string, int> championToHitCount = new Dictionary<string, int>();
+            foreach (ClanBossBattleResult result in results)
+            {
+                if (!championToHitCount.ContainsKey(result.AttackDetails.ActorName))
+                {
+                    championToHitCount[result.AttackDetails.ActorName] = 1;
+                }
+                else
+                {
+                    championToHitCount[result.AttackDetails.ActorName]++;
+                }
+
+                if (result.Counterattacks != null)
+                {
+                    foreach (ClanBossBattleResult.Attack ca in result.Counterattacks)
+                    {
+                        if (!championToHitCount.ContainsKey(result.AttackDetails.ActorName))
+                        {
+                            championToHitCount[result.AttackDetails.ActorName] = 1;
+                        }
+                        else
+                        {
+                            championToHitCount[result.AttackDetails.ActorName]++;
+                        }
+                    }
+                }
+            }
+
+            foreach (string name in championToHitCount.Keys)
+            {
+                Console.WriteLine("{0} had {1} attacks.", name, championToHitCount[name]);
+            }
         }
 
         public static void PrintResults(List<ClanBossBattleResult> results, bool includeUnkillable, bool includeTM)

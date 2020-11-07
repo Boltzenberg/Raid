@@ -130,11 +130,15 @@ namespace ClanBossTurns
             //RunUnkillableSearcher(ClanBoss.Level.Brutal, RaidLib.Simulator.Teams.Gunga.MultiLevel.ChampionCreators());
             //TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, RaidLib.Simulator.Teams.Gunga.MultiLevel.ChampionCreators(), false);
             //TestUnkillableClanBossRun(ClanBoss.Level.Brutal, RaidLib.Simulator.Teams.Gunga.MultiLevel.ChampionCreators(), false);
-            //TestUnkillableClanBossRun(ClanBoss.Level.Brutal, RaidLib.Simulator.Teams.DeadwoodJedi.ChampionCreators(), false);
+            TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, RaidLib.Simulator.Teams.Gunga.MultiLevel4to3.ChampionCreators(), false);
+            Console.WriteLine();
+            TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, RaidLib.Simulator.Teams.Gunga.MultiLevel.ChampionCreators(), false);
+            Console.WriteLine();
             //TestCounterattackTeam(ClanBoss.Level.Nightmare, Teams.ChilliNM.ChampionCreators(), Teams.ChilliNM.GetStunTarget);
 
             //RunUnkillableSearcher(ClanBoss.Level.Brutal, RaidLib.Simulator.Teams.Gunga.MultiLevel.ChampionCreators(), true);
 
+            /*
             Console.WriteLine("MultiLevelUnkillable UNM:");
             PrintEffectiveSpeeds(RaidLib.Simulator.Teams.MultiLevelUnkillable.ChampionCreators(), ClanBoss.Level.UltraNightmare);
             Console.WriteLine();
@@ -143,11 +147,12 @@ namespace ClanBossTurns
             Console.WriteLine();
             TestMultiLevelUnkillableClanBossRun(RaidLib.Simulator.Teams.Gunga.MultiLevel.ChampionCreators());
             Console.ReadLine();
+            */
 
-            /*
-            TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, RaidLib.Simulator.Teams.AllyAttackUnkillable.ChampionCreators(), false);
+            TestMultiLevelUnkillableClanBossRun(RaidLib.Simulator.Teams.Gunga.MultiLevel4to3.ChampionCreators());
             Console.ReadLine();
 
+            /*
             Console.WriteLine("DWJ:");
             TestMultiLevelUnkillableClanBossRun(RaidLib.Simulator.Teams.DeadwoodJedi.ChampionCreators());
             Console.WriteLine();

@@ -10,59 +10,79 @@ namespace RaidLib.Simulator.Teams
 {
     public static class AllyAttackUnkillable
     {
-        /*
-        248 - Maneater
-        232 - DPS
-        223 - Pain Keeper
-        172 - Kreela (or other Ally Attack/DPS)
-        123 - Slow Boi
-        */
-
         static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateManeater(ClanBoss.Level level)
         {
-            // ME- a1, a1, a3, auto
-            List<Constants.SkillId> startupSkillOrder = new List<Constants.SkillId>()
-                {
-                /*
-                    Constants.SkillId.A1,
-                    Constants.SkillId.A1,
-                    Constants.SkillId.A1,
-                    Constants.SkillId.A3,
-                */
-                };
+            List<Constants.SkillId> startupSkillOrder = new List<Constants.SkillId>();
+            switch (level)
+            {
+                case ClanBoss.Level.UltraNightmare:
+                    startupSkillOrder.Add(Constants.SkillId.A3);
+                    break;
+                case ClanBoss.Level.Nightmare:
+                    startupSkillOrder.Add(Constants.SkillId.A1);
+                    startupSkillOrder.Add(Constants.SkillId.A3);
+                    break;
+                case ClanBoss.Level.Brutal:
+                    startupSkillOrder.Add(Constants.SkillId.A1);
+                    startupSkillOrder.Add(Constants.SkillId.A1);
+                    startupSkillOrder.Add(Constants.SkillId.A3);
+                    break;
+                default:
+                    throw new ArgumentException("Only works for Brutal, Nightmare, or UltraNightmare");
+            }
 
-            return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Maneater.Create(248, 0, 0), Maneater.AISkills, startupSkillOrder);
+            return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Maneater.Create(248, 2, 0), Maneater.AISkills, startupSkillOrder);
         }
 
         static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreatePainkeeper(ClanBoss.Level level)
         {
-            // PK - a1, a3, a1, a2
-            List<Constants.SkillId> startupSkillOrder = new List<Constants.SkillId>()
-                {
-                /*
-                    Constants.SkillId.A1,
-                    Constants.SkillId.A3,
-                    Constants.SkillId.A1,
-                    Constants.SkillId.A2,
-                */
-                };
+            List<Constants.SkillId> startupSkillOrder = new List<Constants.SkillId>();
+            switch (level)
+            {
+                case ClanBoss.Level.UltraNightmare:
+                    startupSkillOrder.Add(Constants.SkillId.A1);
+                    startupSkillOrder.Add(Constants.SkillId.A2);
+                    startupSkillOrder.Add(Constants.SkillId.A1);
+                    startupSkillOrder.Add(Constants.SkillId.A3);
+                    break;
+                case ClanBoss.Level.Nightmare:
+                    startupSkillOrder.Add(Constants.SkillId.A3);
+                    startupSkillOrder.Add(Constants.SkillId.A1);
+                    startupSkillOrder.Add(Constants.SkillId.A1);
+                    startupSkillOrder.Add(Constants.SkillId.A2);
+                    break;
+                case ClanBoss.Level.Brutal:
+                    startupSkillOrder.Add(Constants.SkillId.A1);
+                    startupSkillOrder.Add(Constants.SkillId.A3);
+                    startupSkillOrder.Add(Constants.SkillId.A1);
+                    startupSkillOrder.Add(Constants.SkillId.A2);
+                    break;
+                default:
+                    throw new ArgumentException("Only works for Brutal, Nightmare, or UltraNightmare");
+            }
 
-            return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Painkeeper.Create(223, 0, 0), Painkeeper.AISkills, startupSkillOrder);
+            return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Painkeeper.Create(222, 2, 0), Painkeeper.AISkills, startupSkillOrder);
         }
 
         static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateDPS1(ClanBoss.Level level)
         {
-            return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Generic.Create("DPS1", 232), Generic.AISkills, new List<Constants.SkillId>());
+            return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Generic.Create("DPS1", 99, 223, 3, 0), Generic.AISkills, new List<Constants.SkillId>());
         }
 
         static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateDPS2(ClanBoss.Level level)
         {
-            return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Generic.Create("DPS2", 172), Generic.AISkills, new List<Constants.SkillId>());
+            double effectiveSpeed = 171d;
+            if (level == ClanBoss.Level.Nightmare)
+            {
+                effectiveSpeed = 181d;
+            }
+
+            return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Generic.Create("DPS2", effectiveSpeed), Generic.AISkills, new List<Constants.SkillId>());
         }
 
         static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateSlowBoi(ClanBoss.Level level)
         {
-            return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Generic.Create("SlowBoi", 123), Generic.AISkills, new List<Constants.SkillId>());
+            return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Generic.Create("SlowBoi", 123.0d), Generic.AISkills, new List<Constants.SkillId>());
         }
 
         public static List<Champion.CreateChampion> ChampionCreators()
