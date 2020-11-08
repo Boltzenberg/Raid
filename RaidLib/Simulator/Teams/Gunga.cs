@@ -236,13 +236,13 @@ namespace RaidLib.Simulator.Teams
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateRhazinScarhide(ClanBoss.Level level)
             {
-                int effectiveSpeed = 171;
+                int effectiveSpeed = 172;
                 if (level == ClanBoss.Level.Nightmare)
                 {
-                    effectiveSpeed = 181;
+                    effectiveSpeed = 182;
                 }
 
-                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(RhazinScarhide.Create(effectiveSpeed, 0, 0), RhazinScarhide.AISkills, new List<Constants.SkillId>());
+                return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(RhazinScarhide.Create(effectiveSpeed, 0, 1), RhazinScarhide.AISkills, new List<Constants.SkillId>());
             }
 
             static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateSlowboi(ClanBoss.Level level)
@@ -254,11 +254,11 @@ namespace RaidLib.Simulator.Teams
             {
                 return new List<Champion.CreateChampion>()
                 {
-                    CreateRhazinScarhide,
                     CreateFrozenBanshee,
+                    CreateRhazinScarhide,
                     CreateSlowboi,
+                    CreatePainkeeper,
                     CreateManeater,
-                    CreatePainkeeper
                 };
             }
         }

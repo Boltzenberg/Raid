@@ -61,6 +61,8 @@ namespace RaidLib.Simulator
 
         public StunTargetExtractor GetStunTarget { get; set; }
 
+        public string NotInAllyAttack { get; set; }
+
         public ClanBossBattle(ClanBoss.Level level, List<ChampionInBattle> championsInBattle)
         {
             ClanBossInBattle clanBoss = new ClanBossInBattle(ClanBoss.Get(level));
@@ -170,7 +172,7 @@ namespace RaidLib.Simulator
                     {
                         state = new CBBState(currentState);
                         IBattleParticipant champ = state.BattleParticipants.Where(bp => bp.Name == maxTMChamp.Name).First();
-                        List<IBattleParticipant> counterAttackers = new List<IBattleParticipant>();
+                        List<IBattleParticipant> additionalAttackers = new List<IBattleParticipant>();
 
                         champ.TakeTurn(skill);
 
@@ -206,15 +208,35 @@ namespace RaidLib.Simulator
                             {
                                 foreach (EffectToApply effect in action.EffectsToApply)
                                 {
-                                    if (effect.Target == Constants.Target.Self)
+                                    if (effect.Effect == Constants.Effect.AllyAttack)
                                     {
-                                        champ.ApplyEffect(effect.Effect);
-                                    }
-                                    else if (effect.Target == Constants.Target.AllAllies)
-                                    {
-                                        foreach (IBattleParticipant bp in state.BattleParticipants.Where(p => !p.IsClanBoss && p != champ))
+                                        string champToLeaveOut = string.Empty;
+                                        if (effect.Target == Constants.Target.ThreeRandomAllies)
                                         {
-                                            bp.ApplyEffect(effect.Effect);
+                                            champToLeaveOut = this.NotInAllyAttack;
+                                            if (string.IsNullOrEmpty(champToLeaveOut))
+                                            {
+                                                throw new Exception("Need to specify NotInAllyAttack champ!");
+                                            }
+                                        }
+
+                                        foreach (IBattleParticipant bp in state.BattleParticipants.Where(p => !p.IsClanBoss && p != champ && p.Name != champToLeaveOut))
+                                        {
+                                            additionalAttackers.Add(bp);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (effect.Target == Constants.Target.Self)
+                                        {
+                                            champ.ApplyEffect(effect.Effect);
+                                        }
+                                        else if (effect.Target == Constants.Target.AllAllies)
+                                        {
+                                            foreach (IBattleParticipant bp in state.BattleParticipants.Where(p => !p.IsClanBoss && p != champ))
+                                            {
+                                                bp.ApplyEffect(effect.Effect);
+                                            }
                                         }
                                     }
                                 }
@@ -244,6 +266,11 @@ namespace RaidLib.Simulator
                                 }
                             }
 
+                            foreach (IBattleParticipant bp in additionalAttackers)
+                            {
+                                bp.AdditionalAttack();
+                            }
+
                             battleStates.Enqueue(state);
                         }
                         else
@@ -261,7 +288,7 @@ namespace RaidLib.Simulator
                                     if (bp.ActiveBuffs.ContainsKey(Constants.Buff.Counterattack) &&
                                         !bp.ActiveDebuffs.ContainsKey(Constants.Debuff.Stun))
                                     {
-                                        counterAttackers.Add(bp);
+                                        additionalAttackers.Add(bp);
                                     }
 
                                     if (champ.TurnCount > LastKillableTurn && !bp.ActiveBuffs.ContainsKey(Constants.Buff.Unkillable))
@@ -289,13 +316,13 @@ namespace RaidLib.Simulator
                                 if (stunTarget.ActiveBuffs.ContainsKey(Constants.Buff.Counterattack) &&
                                     !stunTarget.ActiveDebuffs.ContainsKey(Constants.Debuff.Stun))
                                 {
-                                    counterAttackers.Add(stunTarget);
+                                    additionalAttackers.Add(stunTarget);
                                 }
                             }
 
-                            foreach (IBattleParticipant bp in counterAttackers)
+                            foreach (IBattleParticipant bp in additionalAttackers)
                             {
-                                bp.Counterattack();
+                                bp.AdditionalAttack();
                             }
 
                             if (champ.TurnCount == MaxClanBossTurns)
@@ -319,13 +346,13 @@ namespace RaidLib.Simulator
                         }
 
                         ClanBossBattleResult.Attack attackDetails = new ClanBossBattleResult.Attack(champ.Name, champ.TurnCount, maxTurnMeter, skill.Id, skill.Name, nextAISkill.Id);
-                        List<ClanBossBattleResult.Attack> counterattacks = new List<ClanBossBattleResult.Attack>();
-                        foreach (IBattleParticipant bp in counterAttackers)
+                        List<ClanBossBattleResult.Attack> additionalAttacks = new List<ClanBossBattleResult.Attack>();
+                        foreach (IBattleParticipant bp in additionalAttackers)
                         {
-                            counterattacks.Add(new ClanBossBattleResult.Attack(bp.Name, bp.TurnCount, bp.TurnMeter, Constants.SkillId.A1, bp.GetA1().Name, Constants.SkillId.A1));
+                            additionalAttacks.Add(new ClanBossBattleResult.Attack(bp.Name, bp.TurnCount, bp.TurnMeter, Constants.SkillId.A1, bp.GetA1().Name, Constants.SkillId.A1));
                         }
 
-                        ClanBossBattleResult result = new ClanBossBattleResult(state.BattleParticipants.First(p => p.IsClanBoss).TurnCount, attackDetails, bpStats, counterattacks);
+                        ClanBossBattleResult result = new ClanBossBattleResult(state.BattleParticipants.First(p => p.IsClanBoss).TurnCount, attackDetails, bpStats, additionalAttacks);
                         state.Results.Add(result);
 
                         if (returnResults)

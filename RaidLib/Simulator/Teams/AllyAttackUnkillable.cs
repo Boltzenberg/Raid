@@ -69,15 +69,20 @@ namespace RaidLib.Simulator.Teams
             return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Generic.Create("DPS1", 99, 223, 3, 0), Generic.AISkills, new List<Constants.SkillId>());
         }
 
-        static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateDPS2(ClanBoss.Level level)
+        static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateAllyAttacker(ClanBoss.Level level)
         {
-            double effectiveSpeed = 171d;
+            int uiSpeed = 172;
             if (level == ClanBoss.Level.Nightmare)
             {
-                effectiveSpeed = 181d;
+                uiSpeed = 181;
             }
 
-            return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Generic.Create("DPS2", effectiveSpeed), Generic.AISkills, new List<Constants.SkillId>());
+            List<Constants.SkillId> startupSkillOrder = new List<Constants.SkillId>();
+            startupSkillOrder.Add(Constants.SkillId.A1);
+            startupSkillOrder.Add(Constants.SkillId.A3);
+            startupSkillOrder.Add(Constants.SkillId.A2);
+
+            return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(KreelaWitchArm.Create(uiSpeed, 0, 0), KreelaWitchArm.AISkills, startupSkillOrder);
         }
 
         static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateSlowBoi(ClanBoss.Level level)
@@ -91,7 +96,7 @@ namespace RaidLib.Simulator.Teams
                 {
                     CreateSlowBoi,
                     CreateDPS1,
-                    CreateDPS2,
+                    CreateAllyAttacker,
                     CreatePainkeeper,
                     CreateManeater,
                 };

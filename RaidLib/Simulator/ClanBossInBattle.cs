@@ -96,7 +96,7 @@ namespace RaidLib.Simulator
             return this.skills.Where(s => s.Id == Constants.SkillId.A1).First();
         }
 
-        public void Counterattack()
+        public void AdditionalAttack()
         {
 
         }

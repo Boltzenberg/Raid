@@ -55,6 +55,7 @@ namespace RaidLib.DataModel
             OneEnemy,
             Self,      // Just me
             OneAlly,   // Just one ally
+            ThreeRandomAllies, // Usually used for ally attack
             AllAllies, // Everybody on my team but me
             FullTeam   // My whole team
         }
@@ -62,6 +63,7 @@ namespace RaidLib.DataModel
         public enum Effect
         {
             None,
+            AllyAttack,
             FillTurnMeterBy10Percent,
             ReduceDebuffCooldownBy1,
             ReduceSkillCooldownBy1,

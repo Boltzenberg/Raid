@@ -130,9 +130,10 @@ namespace ClanBossTurns
             //RunUnkillableSearcher(ClanBoss.Level.Brutal, RaidLib.Simulator.Teams.Gunga.MultiLevel.ChampionCreators());
             //TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, RaidLib.Simulator.Teams.Gunga.MultiLevel.ChampionCreators(), false);
             //TestUnkillableClanBossRun(ClanBoss.Level.Brutal, RaidLib.Simulator.Teams.Gunga.MultiLevel.ChampionCreators(), false);
+            //TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, RaidLib.Simulator.Teams.AllyAttackUnkillable.ChampionCreators(), false, "SlowBoi");
+            //Console.WriteLine();
+
             TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, RaidLib.Simulator.Teams.Gunga.MultiLevel4to3.ChampionCreators(), false);
-            Console.WriteLine();
-            TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, RaidLib.Simulator.Teams.Gunga.MultiLevel.ChampionCreators(), false);
             Console.WriteLine();
             //TestCounterattackTeam(ClanBoss.Level.Nightmare, Teams.ChilliNM.ChampionCreators(), Teams.ChilliNM.GetStunTarget);
 
@@ -182,7 +183,7 @@ namespace ClanBossTurns
             ClanBossBattleResultsAnalysis.PrintResults(results, false, false);
         }
 
-        static void TestMultiLevelUnkillableClanBossRun(List<Champion.CreateChampion> championCreators)
+        static void TestMultiLevelUnkillableClanBossRun(List<Champion.CreateChampion> championCreators, string allyAttackChampionToExclude = "")
         {
             foreach (ClanBoss.Level clanBossLevel in new List<ClanBoss.Level>() { ClanBoss.Level.Brutal, ClanBoss.Level.Nightmare, ClanBoss.Level.UltraNightmare })
             {
@@ -199,13 +200,14 @@ namespace ClanBossTurns
                 }
 
                 ClanBossBattle baseline = new ClanBossBattle(clanBossLevel, cibs);
+                baseline.NotInAllyAttack = allyAttackChampionToExclude;
                 List<ClanBossBattleResult> baselineResult = baseline.Run();
                 int lastKillableTurn = ClanBossBattleResultsAnalysis.LastClanBossTurnThatHitKillableChampion(baselineResult, Utils.FindSlowestChampion(champions));
                 Console.WriteLine("{0}: Last turn where there was a hit on a champion that wasn't unkillable:  {1}", clanBossLevel, lastKillableTurn);
             }
         }
 
-        static void TestUnkillableClanBossRun(ClanBoss.Level clanBossLevel, List<Champion.CreateChampion> championCreators, bool startupSequenceSearch)
+        static void TestUnkillableClanBossRun(ClanBoss.Level clanBossLevel, List<Champion.CreateChampion> championCreators, bool startupSequenceSearch, string allyAttackChampionToExclude = "")
         {
             List<Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>> champTuples = new List<Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>>();
             foreach (Champion.CreateChampion cc in championCreators)
@@ -221,9 +223,10 @@ namespace ClanBossTurns
                 cibs.Add(new ChampionInBattle(tuple.Item1, tuple.Item2, tuple.Item3));
             }
             ClanBossBattle baseline = new ClanBossBattle(clanBossLevel, cibs);
+            baseline.NotInAllyAttack = allyAttackChampionToExclude;
             List<ClanBossBattleResult> baselineResult = baseline.Run();
             Console.WriteLine("Baseline Results:");
-            ClanBossBattleResultsAnalysis.PrintSummary(baselineResult, Utils.FindSlowestChampion(champions), true, true);
+            ClanBossBattleResultsAnalysis.PrintSummary(baselineResult, Utils.FindSlowestChampion(champions), false, false);
 
             if (startupSequenceSearch)
             {

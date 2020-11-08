@@ -21,7 +21,7 @@ namespace RaidLib.Simulator
         Skill NextAISkill();
         Skill GetA1();
         void TakeTurn(Skill skill);
-        void Counterattack();
+        void AdditionalAttack();
         void ClockTick();
 
         void ApplyBuff(BuffToApply buff);

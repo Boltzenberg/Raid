@@ -224,7 +224,7 @@ namespace RaidLib.Simulator
             return this.skillsToUse.Where(s => s.Skill.Id == Constants.SkillId.A1).First().Skill;
         }
 
-        public void Counterattack()
+        public void AdditionalAttack()
         {
             this.TakeTurn(this.GetA1(), true);
         }
@@ -234,7 +234,7 @@ namespace RaidLib.Simulator
             this.TakeTurn(skill, false);
         }
 
-        private void TakeTurn(Skill skill, bool isCounterattack)
+        private void TakeTurn(Skill skill, bool isAdditionalAttack)
         {
             if (skill.Id != Constants.SkillId.RE)
             {
@@ -247,7 +247,7 @@ namespace RaidLib.Simulator
                 skillToUse.CooldownsRemaining = skillToUse.Skill.Cooldown;
             }
 
-            if (!isCounterattack)
+            if (!isAdditionalAttack)
             {
                 foreach (SkillInBattle sib in this.skillsToUse)
                 {

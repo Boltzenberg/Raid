@@ -12,7 +12,7 @@ namespace RaidLib.Simulator
     {
         public static void PrintSummary(List<ClanBossBattleResult> results, Champion stunTarget, bool includeUnkillable, bool includeTM)
         {
-            ClanBossBattleResultsAnalysis.PrintResults(results, true, false);
+            ClanBossBattleResultsAnalysis.PrintResults(results, includeUnkillable, includeTM);
             int lastKillableTurn = ClanBossBattleResultsAnalysis.LastClanBossTurnThatHitKillableChampion(results, stunTarget);
             Console.WriteLine("Last turn where there was a hit on a champion that wasn't unkillable:  {0}", lastKillableTurn);
             PrintAttacksPerChampion(results);
@@ -20,37 +20,23 @@ namespace RaidLib.Simulator
 
         public static void PrintAttacksPerChampion(List<ClanBossBattleResult> results)
         {
-            Dictionary<string, int> championToHitCount = new Dictionary<string, int>();
+            Dictionary<string, int> championToAttackCount = new Dictionary<string, int>();
             foreach (ClanBossBattleResult result in results)
             {
-                if (!championToHitCount.ContainsKey(result.AttackDetails.ActorName))
-                {
-                    championToHitCount[result.AttackDetails.ActorName] = 1;
-                }
-                else
-                {
-                    championToHitCount[result.AttackDetails.ActorName]++;
-                }
+                championToAttackCount[result.AttackDetails.ActorName] = result.AttackDetails.ActorTurn;
 
-                if (result.Counterattacks != null)
+                if (result.AdditionalAttacks != null)
                 {
-                    foreach (ClanBossBattleResult.Attack ca in result.Counterattacks)
+                    foreach (ClanBossBattleResult.Attack aa in result.AdditionalAttacks)
                     {
-                        if (!championToHitCount.ContainsKey(result.AttackDetails.ActorName))
-                        {
-                            championToHitCount[result.AttackDetails.ActorName] = 1;
-                        }
-                        else
-                        {
-                            championToHitCount[result.AttackDetails.ActorName]++;
-                        }
+                        championToAttackCount[aa.ActorName] = aa.ActorTurn;
                     }
                 }
             }
 
-            foreach (string name in championToHitCount.Keys)
+            foreach (string name in championToAttackCount.Keys)
             {
-                Console.WriteLine("{0} had {1} attacks.", name, championToHitCount[name]);
+                Console.WriteLine("{0} had {1} attacks.", name, championToAttackCount[name]);
             }
         }
 
@@ -71,11 +57,11 @@ namespace RaidLib.Simulator
 
                 Console.WriteLine("{0,2}: {1,20} turn {2,2} use skill {3} ({4,20}){5}", result.ClanBossTurn, result.AttackDetails.ActorName, result.AttackDetails.ActorTurn, result.AttackDetails.Skill, result.AttackDetails.SkillName, suffix);
 
-                if (result.Counterattacks != null)
+                if (result.AdditionalAttacks != null)
                 {
-                    foreach (ClanBossBattleResult.Attack ca in result.Counterattacks)
+                    foreach (ClanBossBattleResult.Attack ca in result.AdditionalAttacks)
                     {
-                        Console.WriteLine("    {0,20} counterattacks for turn {1,2}", ca.ActorName, ca.ActorTurn);
+                        Console.WriteLine("    {0,20} also attacks for turn {1,2}", ca.ActorName, ca.ActorTurn);
                     }
                 }
             }

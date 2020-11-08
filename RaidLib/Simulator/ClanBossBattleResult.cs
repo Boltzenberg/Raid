@@ -38,16 +38,16 @@ namespace RaidLib.Simulator
 
         public Attack AttackDetails { get; private set; }
 
-        public List<Attack> Counterattacks { get; private set; }
+        public List<Attack> AdditionalAttacks { get; private set; }
 
         public List<BattleParticipantStats> BattleParticipants { get; private set; }
 
-        public ClanBossBattleResult(int clanBossTurn, Attack attackDetails, List<BattleParticipantStats> battleParticipantStats, List<Attack> counterattacks)
+        public ClanBossBattleResult(int clanBossTurn, Attack attackDetails, List<BattleParticipantStats> battleParticipantStats, List<Attack> additionalAttacks)
         {
             this.ClanBossTurn = clanBossTurn;
             this.AttackDetails = attackDetails;
             this.BattleParticipants = battleParticipantStats;
-            this.Counterattacks = counterattacks;
+            this.AdditionalAttacks = additionalAttacks;
         }
 
         public class BattleParticipantStats
