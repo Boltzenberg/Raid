@@ -21,7 +21,7 @@ namespace RaidLib.DataModel.Champions
 
         public static Champion Create(double effectiveSpeed)
         {
-            return new Champion("Rhazin Scarhide", effectiveSpeed, GetSkills());
+            return new Champion("Rhazin Scarhide", 91, effectiveSpeed, GetSkills());
         }
 
         public static Champion Create(int uiSpeed, int speedSets, int perceptionSets)

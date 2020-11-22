@@ -32,12 +32,22 @@ namespace RaidLib.DataModel.Champions
 
         public static Champion Create(double effectiveSpeed)
         {
-            return new Champion("Maneater", effectiveSpeed, GetSkills());
+            return Create("Maneater", effectiveSpeed);
+        }
+
+        public static Champion Create(string name, double effectiveSpeed)
+        {
+            return new Champion(name, 98, effectiveSpeed, GetSkills());
         }
 
         public static Champion Create(int uiSpeed, int speedSets, int perceptionSets)
         {
-            return new Champion("Maneater", 98, uiSpeed, speedSets, perceptionSets, GetSkills());
+            return Create("Maneater", uiSpeed, speedSets, perceptionSets);
+        }
+
+        public static Champion Create(string name, int uiSpeed, int speedSets, int perceptionSets)
+        {
+            return new Champion(name, 98, uiSpeed, speedSets, perceptionSets, GetSkills());
         }
 
         public static List<Constants.SkillId> AISkills

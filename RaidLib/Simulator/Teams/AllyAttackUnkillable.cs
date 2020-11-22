@@ -139,7 +139,7 @@ namespace RaidLib.Simulator.Teams
 
         static Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>> CreateSlowBoi(ClanBoss.Level level)
         {
-            return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Generic.Create("SlowBoi", 123.0d), Generic.AISkills, new List<Constants.SkillId>());
+            return new Tuple<Champion, List<Constants.SkillId>, List<Constants.SkillId>>(Generic.Create("SlowBoi", 0, 123.0d), Generic.AISkills, new List<Constants.SkillId>());
         }
 
         public static List<Champion.CreateChampion> TeamWithKreela()

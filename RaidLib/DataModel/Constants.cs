@@ -34,13 +34,19 @@ namespace RaidLib.DataModel
         {
             BlockDebuffs,
             Counterattack,
+            IncreaseAttack50,
+            IncreaseCritRate30,
+            IncreaseSpeed15,
+            IncreaseSpeed30,
             Unkillable,
         }
 
         public enum Debuff
         {
-            DecreaseDefense60,
             DecreaseAttack50,
+            DecreaseDefense60,
+            DecreaseSpeed15,
+            DecreaseSpeed30,
             HPBurn,
             Poison5,
             PoisonSensitivity,
@@ -64,6 +70,7 @@ namespace RaidLib.DataModel
         {
             None,
             AllyAttack,
+            ExtraTurn,
             FillTurnMeterBy10Percent,
             ReduceDebuffCooldownBy1,
             ReduceSkillCooldownBy1,

@@ -21,7 +21,7 @@ namespace RaidLib.DataModel.Champions
 
         public static Champion Create(double effectiveSpeed)
         {
-            return new Champion("Frozen Banshee", effectiveSpeed, GetSkills());
+            return new Champion("Frozen Banshee", 99, effectiveSpeed, GetSkills());
         }
 
         public static Champion Create(int uiSpeed, int speedSets, int perceptionSets)

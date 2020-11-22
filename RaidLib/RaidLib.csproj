@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataModel\Champions\CatacombCouncilor.cs" />
+    <Compile Include="DataModel\Champions\Turvold.cs" />
+    <Compile Include="DataModel\Champions\Dracomorph.cs" />
     <Compile Include="DataModel\Champions\Longbeard.cs" />
     <Compile Include="DataModel\Champions\KreelaWitchArm.cs" />
     <Compile Include="DataModel\Champions\Generic.cs" />
@@ -74,6 +76,8 @@
     <Compile Include="Simulator\ClanBossInBattle.cs" />
     <Compile Include="Simulator\SkillInBattle.cs" />
     <Compile Include="Simulator\Teams\AllyAttackUnkillable.cs" />
+    <Compile Include="Simulator\Teams\Pavelow.cs" />
+    <Compile Include="Simulator\Teams\Mudd.cs" />
     <Compile Include="Simulator\Teams\MultiLevelUnkillable.cs" />
     <Compile Include="Simulator\Teams\DeadwoodJedi.cs" />
     <Compile Include="Simulator\Teams\Gunga.cs" />

@@ -25,13 +25,13 @@ namespace RaidLib.DataModel
             this.EffectiveSpeed = baseSpeed + artifactSpeed + setSpeedBoost;
         }
 
-        public Champion(string name, double effectiveSpeed, List<Skill> skills)
+        public Champion(string name, int baseSpeed, double effectiveSpeed, List<Skill> skills)
         {
             this.Name = name;
             this.Skills = skills;
+            this.BaseSpeed = baseSpeed;
             this.EffectiveSpeed = effectiveSpeed;
 
-            this.BaseSpeed = 0;
             this.UISpeed = 0;
             this.SpeedSets = 0;
             this.PerceptionSets = 0;
@@ -60,7 +60,7 @@ namespace RaidLib.DataModel
                 return this;
             }
 
-            return new Champion(this.Name, this.EffectiveSpeed + effectiveSpeedDelta, this.Skills);
+            return new Champion(this.Name, this.BaseSpeed, this.EffectiveSpeed + effectiveSpeedDelta, this.Skills);
         }
 
         public string Name { get; private set; }
@@ -71,6 +71,8 @@ namespace RaidLib.DataModel
         public int SpeedSets { get; private set; }
         public int PerceptionSets { get; private set; }
 
+        public double SetSpeedBoost { get; private set; }
+        public double ArtifactSpeed { get; private set; }
         public double EffectiveSpeed { get; }
 
         public List<Skill> Skills { get; private set; }

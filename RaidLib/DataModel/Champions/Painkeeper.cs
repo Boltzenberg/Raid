@@ -29,7 +29,7 @@ namespace RaidLib.DataModel.Champions
 
         public static Champion Create(double effectiveSpeed)
         {
-            return new Champion("Painkeeper", effectiveSpeed, GetSkills());
+            return new Champion("Painkeeper", 102, effectiveSpeed, GetSkills());
         }
 
         public static Champion Create(int uiSpeed, int speedSets, int perceptionSets)

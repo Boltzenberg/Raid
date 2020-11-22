@@ -16,7 +16,6 @@ namespace RaidLib.Simulator
         public Dictionary<Constants.Debuff, int> ActiveDebuffs { get; private set; }
         public Champion Champ { get; private set; }
         public double TurnMeter { get; private set; }
-        public double TurnMeterIncreaseOnClockTick { get; private set; }
         public int TurnCount { get; private set; }
         public bool IsClanBoss { get { return false; } }
         public string Name { get { return this.Champ.Name; } }
@@ -29,7 +28,6 @@ namespace RaidLib.Simulator
             this.TurnMeter = 0;
             this.ActiveBuffs = new Dictionary<Constants.Buff, int>();
             this.ActiveDebuffs = new Dictionary<Constants.Debuff, int>();
-            this.TurnMeterIncreaseOnClockTick = Constants.TurnMeter.DeltaPerTurn(this.Champ.EffectiveSpeed);
             this.skillsToUse = new List<SkillInBattle>();
             foreach (Constants.SkillId skillId in skillsToUseInThisBattle)
             {
@@ -49,7 +47,6 @@ namespace RaidLib.Simulator
             this.TurnMeter = other.TurnMeter;
             this.ActiveBuffs = new Dictionary<Constants.Buff, int>(other.ActiveBuffs);
             this.ActiveDebuffs = new Dictionary<Constants.Debuff, int>(other.ActiveDebuffs);
-            this.TurnMeterIncreaseOnClockTick = other.TurnMeterIncreaseOnClockTick;
             this.LeaveOutOfAllyAttack = other.LeaveOutOfAllyAttack;
             this.skillsToUse = new List<SkillInBattle>();
             foreach (SkillInBattle sib in other.skillsToUse)
@@ -281,6 +278,32 @@ namespace RaidLib.Simulator
             }
 
             this.TurnCount++;
+        }
+        public double TurnMeterIncreaseOnClockTick 
+        {
+            get
+            {
+                double buffDebuffSpeedDelta = 0.0d;
+                if (this.ActiveBuffs.ContainsKey(Constants.Buff.IncreaseSpeed30))
+                {
+                    buffDebuffSpeedDelta += 0.3d;
+                }
+                else if (this.ActiveBuffs.ContainsKey(Constants.Buff.IncreaseSpeed15))
+                {
+                    buffDebuffSpeedDelta += 0.15d;
+                }
+
+                if (this.ActiveDebuffs.ContainsKey(Constants.Debuff.DecreaseSpeed30))
+                {
+                    buffDebuffSpeedDelta -= 0.3d;
+                }
+                else if (this.ActiveDebuffs.ContainsKey(Constants.Debuff.DecreaseSpeed15))
+                {
+                    buffDebuffSpeedDelta -= 0.15;
+                }
+
+                return Constants.TurnMeter.DeltaPerTurn(this.Champ.EffectiveSpeed + (this.Champ.BaseSpeed * buffDebuffSpeedDelta));
+            }
         }
 
         public void ClockTick()
