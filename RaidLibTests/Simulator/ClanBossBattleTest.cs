@@ -17,15 +17,15 @@ namespace RaidLibTests.Simulator
             return new Champion(name, 0, uiSpeed, 0, 0, new List<Skill>() { new Skill("A1", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()) });
         }
 
-        private static Dictionary<Champion, Tuple<List<Constants.SkillId>, List<Constants.SkillId>>> GetChampions()
+        private static List<ChampionInBattle> GetChampions()
         {
-            Dictionary<Champion, Tuple<List<Constants.SkillId>, List<Constants.SkillId>>> results = new Dictionary<Champion, Tuple<List<Constants.SkillId>, List<Constants.SkillId>>>();
-            results[Maneater.Create(227, 2, 0)] = new Tuple<List<Constants.SkillId>, List<Constants.SkillId>>(Maneater.AISkills, new List<Constants.SkillId>());
-            results[Painkeeper.Create(213, 2, 0)] = new Tuple<List<Constants.SkillId>, List<Constants.SkillId>>(Painkeeper.AISkills, new List<Constants.SkillId>() { Constants.SkillId.A3, Constants.SkillId.A1 });
-            results[CreateChampion("DPS1", 159)] = new Tuple<List<Constants.SkillId>, List<Constants.SkillId>>(new List<Constants.SkillId>() { Constants.SkillId.A1 }, new List<Constants.SkillId>());
-            results[CreateChampion("DPS2", 159)] = new Tuple<List<Constants.SkillId>, List<Constants.SkillId>>(new List<Constants.SkillId>() { Constants.SkillId.A1 }, new List<Constants.SkillId>());
-            results[CreateChampion("Slowboi", 106)] = new Tuple<List<Constants.SkillId>, List<Constants.SkillId>>(new List<Constants.SkillId>() { Constants.SkillId.A1 }, new List<Constants.SkillId>());
-            return results;
+            List<ChampionInBattle> cibs = new List<ChampionInBattle>();
+            cibs.Add(new ChampionInBattle(Maneater.Create(227, 2, 0), Maneater.AISkills, new List<Constants.SkillId>()));
+            cibs.Add(new ChampionInBattle(Painkeeper.Create(213, 2, 0), Painkeeper.AISkills, new List<Constants.SkillId>() { Constants.SkillId.A3, Constants.SkillId.A1 }));
+            cibs.Add(new ChampionInBattle(CreateChampion("DPS1", 159), new List<Constants.SkillId>() { Constants.SkillId.A1 }, new List<Constants.SkillId>()));
+            cibs.Add(new ChampionInBattle(CreateChampion("DPS2", 159), new List<Constants.SkillId>() { Constants.SkillId.A1 }, new List<Constants.SkillId>()));
+            cibs.Add(new ChampionInBattle(CreateChampion("Slowboi", 106), new List<Constants.SkillId>() { Constants.SkillId.A1 }, new List<Constants.SkillId>()));
+            return cibs;
         }
 
         [TestMethod]

@@ -8,11 +8,20 @@ using System.Threading.Tasks;
 
 namespace RaidLib.Simulator
 {
+    [Flags]
+    public enum CBBRA
+    {
+        None = 0x0,
+        IncludeUnkillable = 0x1,
+        IncludeTurnMeter = 0x2,
+        IncludeCooldowns = 0x4,
+    }
+
     public static class ClanBossBattleResultsAnalysis
     {
-        public static void PrintSummary(List<ClanBossBattleResult> results, Champion stunTarget, bool includeUnkillable, bool includeTM)
+        public static void PrintSummary(List<ClanBossBattleResult> results, Champion stunTarget, CBBRA flags)
         {
-            ClanBossBattleResultsAnalysis.PrintResults(results, includeUnkillable, includeTM);
+            ClanBossBattleResultsAnalysis.PrintResults(results, flags);
             int lastKillableTurn = ClanBossBattleResultsAnalysis.LastClanBossTurnThatHitKillableChampion(results, stunTarget);
             Console.WriteLine("Last turn where there was a hit on a champion that wasn't unkillable:  {0}", lastKillableTurn);
             PrintAttacksPerChampion(results);
@@ -40,22 +49,35 @@ namespace RaidLib.Simulator
             }
         }
 
-        public static void PrintResults(List<ClanBossBattleResult> results, bool includeUnkillable, bool includeTM)
+        public static void PrintResults(List<ClanBossBattleResult> results, CBBRA flags)
         {
             foreach (ClanBossBattleResult result in results)
             {
                 string suffix = string.Empty;
-                if (includeUnkillable)
+                if ((flags & CBBRA.IncludeUnkillable) == CBBRA.IncludeUnkillable)
                 {
                     suffix = string.Format(" - Unkillable Champs: {0}", string.Join(", ", result.BattleParticipants.Where(p => !p.IsClanBoss && p.ActiveBuffs.ContainsKey(Constants.Buff.Unkillable)).Select(p => p.Name)));
                 }
 
-                if (includeTM)
+                if ((flags & CBBRA.IncludeTurnMeter) == CBBRA.IncludeTurnMeter)
                 {
                     suffix += string.Format(" - TM: {0}", string.Join(", ", result.BattleParticipants.Where(p => !p.IsClanBoss).Select(p => p.Name + ": " + p.TurnMeter)));
                 }
 
                 Console.WriteLine("{0,2}: {1,20} turn {2,2} use skill {3} ({4,20}){5}", result.ClanBossTurn, result.AttackDetails.ActorName, result.AttackDetails.ActorTurn, result.AttackDetails.Skill, result.AttackDetails.SkillName, suffix);
+
+                if ((flags & CBBRA.IncludeCooldowns) == CBBRA.IncludeCooldowns)
+                {
+                    foreach (ClanBossBattleResult.BattleParticipantStats bp in result.BattleParticipants)
+                    {
+                        string cooldowns = string.Format("  {0,20} Cooldowns: ", bp.Name);
+                        foreach (Constants.SkillId skillId in bp.SkillCooldownMap.Keys)
+                        {
+                            cooldowns += string.Format("{0}: {1} ", skillId, bp.SkillCooldownMap[skillId]);
+                        }
+                        Console.WriteLine(cooldowns);
+                    }
+                }
 
                 if (result.AdditionalAttacks != null)
                 {

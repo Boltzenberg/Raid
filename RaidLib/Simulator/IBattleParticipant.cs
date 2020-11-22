@@ -31,6 +31,7 @@ namespace RaidLib.Simulator
         Dictionary<Constants.Buff, int> ActiveBuffs { get; }
         Dictionary<Constants.Debuff, int> ActiveDebuffs { get; }
 
+        bool LeaveOutOfAllyAttack { get; }
         bool IsClanBoss { get; }
         IBattleParticipant Clone();
     }

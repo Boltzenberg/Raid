@@ -15,6 +15,7 @@ namespace RaidLib.Simulator
         public double TurnMeterIncreaseOnClockTick { get; private set; }
         public int TurnCount { get; private set; }
         public bool IsClanBoss { get { return true; } }
+        public bool LeaveOutOfAllyAttack { get { return false; } }
         public string Name { get { return Constants.Names.ClanBoss; } }
 
         public ClanBossInBattle(ClanBoss clanBoss)

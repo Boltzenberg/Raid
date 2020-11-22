@@ -56,13 +56,14 @@ namespace RaidLib.Simulator
         {
             foreach (List<Champion> cs in this.GetChampionLists())
             {
-                Dictionary<Champion, Tuple<List<Constants.SkillId>, List<Constants.SkillId>>> skillPoliciesByChampion = new Dictionary<Champion, Tuple<List<Constants.SkillId>, List<Constants.SkillId>>>();
-                foreach (Champion c in cs)
+                List<ChampionInBattle> champions = new List<ChampionInBattle>();
+                foreach (Champion champ in cs)
                 {
-                    skillPoliciesByChampion[c] = this.skillPoliciesByChampionName[c.Name];
+                    Tuple<List<Constants.SkillId>, List<Constants.SkillId>> policies = this.skillPoliciesByChampionName[champ.Name];
+                    champions.Add(new ChampionInBattle(champ, policies.Item1, policies.Item2));
                 }
 
-                ClanBossBattle battle = new ClanBossBattle(level, skillPoliciesByChampion);
+                ClanBossBattle battle = new ClanBossBattle(level, champions);
                 List<ClanBossBattleResult> results = battle.Run();
                 int lastKillableTurn = ClanBossBattleResultsAnalysis.LastClanBossTurnThatHitKillableChampion(results, Utils.FindSlowestChampion(cs));
                 if (lastKillableTurn < 10)

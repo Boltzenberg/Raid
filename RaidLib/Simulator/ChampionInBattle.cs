@@ -20,6 +20,7 @@ namespace RaidLib.Simulator
         public int TurnCount { get; private set; }
         public bool IsClanBoss { get { return false; } }
         public string Name { get { return this.Champ.Name; } }
+        public bool LeaveOutOfAllyAttack { get; set; }
 
         public ChampionInBattle(Champion champion, List<Constants.SkillId> skillsToUseInThisBattle, List<Constants.SkillId> startupSkillOrder)
         {
@@ -49,6 +50,7 @@ namespace RaidLib.Simulator
             this.ActiveBuffs = new Dictionary<Constants.Buff, int>(other.ActiveBuffs);
             this.ActiveDebuffs = new Dictionary<Constants.Debuff, int>(other.ActiveDebuffs);
             this.TurnMeterIncreaseOnClockTick = other.TurnMeterIncreaseOnClockTick;
+            this.LeaveOutOfAllyAttack = other.LeaveOutOfAllyAttack;
             this.skillsToUse = new List<SkillInBattle>();
             foreach (SkillInBattle sib in other.skillsToUse)
             {
