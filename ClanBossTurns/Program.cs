@@ -130,11 +130,12 @@ namespace ClanBossTurns
             //RunUnkillableSearcher(ClanBoss.Level.Brutal, RaidLib.Simulator.Teams.Gunga.MultiLevel.ChampionCreators());
             //TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, RaidLib.Simulator.Teams.Gunga.MultiLevel.ChampionCreators(), false);
             //TestUnkillableClanBossRun(ClanBoss.Level.Brutal, RaidLib.Simulator.Teams.Gunga.MultiLevel.ChampionCreators(), false);
-            
+
+            TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, RaidLib.Simulator.Teams.Mudd.DoubleManeater.ChampionCreators(), false);
             //TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, RaidLib.Simulator.Teams.AllyAttackUnkillable.TeamWithKreela(), false, "SlowBoi");
             Console.WriteLine();
 
-            TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, RaidLib.Simulator.Teams.AllyAttackUnkillable.TeamWithCatacombCouncilor(), false, "SlowBoi");
+            //TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, RaidLib.Simulator.Teams.AllyAttackUnkillable.TeamWithCatacombCouncilor(), false, "SlowBoi");
             Console.WriteLine();
 
             //TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, RaidLib.Simulator.Teams.Gunga.MultiLevel4to3.ChampionCreators(), false);

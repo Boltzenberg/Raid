@@ -131,6 +131,11 @@ namespace RaidLib.Simulator
                         }
                         break;
                     }
+                case Constants.Effect.ExtraTurn:
+                    {
+                        this.TurnMeter = double.MaxValue;
+                        break;
+                    }
                 default:
                     break;
             }
@@ -279,6 +284,7 @@ namespace RaidLib.Simulator
 
             this.TurnCount++;
         }
+
         public double TurnMeterIncreaseOnClockTick 
         {
             get
@@ -308,7 +314,10 @@ namespace RaidLib.Simulator
 
         public void ClockTick()
         {
-            this.TurnMeter += this.TurnMeterIncreaseOnClockTick;
+            if (this.TurnMeter != double.MaxValue)
+            {
+                this.TurnMeter += this.TurnMeterIncreaseOnClockTick;
+            }
         }
     }
 }
