@@ -63,7 +63,10 @@ namespace RaidLib.Simulator
 
         public void ApplyDebuff(DebuffToApply debuff)
         {
-
+            if (!this.ActiveBuffs.ContainsKey(Constants.Buff.BlockDebuffs) && this.ActiveDebuffs.Count <= 10)
+            {
+                this.ActiveDebuffs[debuff.Debuff] = debuff.Duration;
+            }
         }
 
         public void ApplyEffect(Constants.Effect effect)
@@ -104,10 +107,17 @@ namespace RaidLib.Simulator
 
         public void TakeTurn(Skill skill)
         {
-            this.TurnCount++;
-            //Console.WriteLine("Clan Boss uses skill {0} ({1}) on turn {2} with turn meter {3}!", skills[skill].Id, skills[skill].Name, this.turnCount, this.TurnMeter);
-            //Console.WriteLine("Clan Boss Turn {0}: skill {1} ({2})", this.TurnCount, skill.Id, skill.Name);
+            foreach (Constants.Debuff debuff in new List<Constants.Debuff>(this.ActiveDebuffs.Keys))
+            {
+                this.ActiveDebuffs[debuff]--;
+                if (this.ActiveDebuffs[debuff] == 0)
+                {
+                    this.ActiveDebuffs.Remove(debuff);
+                }
+            }
+
             this.TurnMeter = 0;
+            this.TurnCount++;
         }
 
         public void ClockTick()

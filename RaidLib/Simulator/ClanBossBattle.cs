@@ -244,7 +244,7 @@ namespace RaidLib.Simulator
                         List<ClanBossBattleResult.BattleParticipantStats> bpStats = new List<ClanBossBattleResult.BattleParticipantStats>();
                         foreach (IBattleParticipant bp in state.BattleParticipants)
                         {
-                            ClanBossBattleResult.BattleParticipantStats bpStat = new ClanBossBattleResult.BattleParticipantStats(bp.Name, bp.IsClanBoss, bp.TurnMeter, new Dictionary<Constants.Buff, int>(bp.ActiveBuffs), bp.GetSkillToCooldownMap());
+                            ClanBossBattleResult.BattleParticipantStats bpStat = new ClanBossBattleResult.BattleParticipantStats(bp.Name, bp.IsClanBoss, bp.TurnMeter, new Dictionary<Constants.Buff, int>(bp.ActiveBuffs), new Dictionary<Constants.Debuff, int>(bp.ActiveDebuffs), bp.GetSkillToCooldownMap());
                             bpStats.Add(bpStat);
                         }
 
@@ -293,6 +293,24 @@ namespace RaidLib.Simulator
                         {
                             bp.ApplyBuff(buff);
                         }
+                    }
+                }
+            }
+
+            if (action.DebuffsToApply != null)
+            {
+                foreach (DebuffToApply debuff in action.DebuffsToApply)
+                {
+                    if (debuff.Target == Constants.Target.AllEnemies)
+                    {
+                        foreach (IBattleParticipant bp in enemies)
+                        {
+                            bp.ApplyDebuff(debuff);
+                        }
+                    }
+                    else if (debuff.Target == Constants.Target.OneEnemy)
+                    {
+                        singleTargetEnemy.ApplyDebuff(debuff);
                     }
                 }
             }

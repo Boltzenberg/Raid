@@ -93,6 +93,7 @@ namespace RaidLib.Simulator.Teams
                     break;
                 case ClanBoss.Level.Brutal:
                     startupSkillOrder.Add(Constants.SkillId.A1);
+                    startupSkillOrder.Add(Constants.SkillId.A1);
                     startupSkillOrder.Add(Constants.SkillId.A3);
                     startupSkillOrder.Add(Constants.SkillId.A2);
                     break;

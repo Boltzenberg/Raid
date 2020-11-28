@@ -56,14 +56,16 @@ namespace RaidLib.Simulator
             public bool IsClanBoss { get; private set; }
             public double TurnMeter { get; private set; }
             public Dictionary<Constants.Buff, int> ActiveBuffs { get; private set; }
+            public Dictionary<Constants.Debuff, int> ActiveDebuffs { get; private set; }
             public Dictionary<Constants.SkillId, int> SkillCooldownMap { get; private set; }
 
-            public BattleParticipantStats(string name, bool isClanBoss, double turnMeter, Dictionary<Constants.Buff, int> activeBuffs, Dictionary<Constants.SkillId, int> skillCooldownMap)
+            public BattleParticipantStats(string name, bool isClanBoss, double turnMeter, Dictionary<Constants.Buff, int> activeBuffs, Dictionary<Constants.Debuff, int> activeDebuffs, Dictionary<Constants.SkillId, int> skillCooldownMap)
             {
                 this.Name = name;
                 this.IsClanBoss = isClanBoss;
                 this.TurnMeter = turnMeter;
                 this.ActiveBuffs = activeBuffs;
+                this.ActiveDebuffs = activeDebuffs;
                 this.SkillCooldownMap = skillCooldownMap;
             }
         }

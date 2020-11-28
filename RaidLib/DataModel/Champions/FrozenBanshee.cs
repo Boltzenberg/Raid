@@ -14,7 +14,7 @@ namespace RaidLib.DataModel.Champions
             List<Skill> skills = new List<Skill>();
             skills.Add(new Skill("Death's Caress", Constants.SkillId.A1, 0, TurnAction.AttackOneEnemy()));
             skills.Add(new Skill("Cruel Exultation", Constants.SkillId.A2, 3, TurnAction.AttackOneEnemy()));
-            skills.Add(new Skill("Frost Blight", Constants.SkillId.A3, 3, TurnAction.AttackOneEnemy()));
+            skills.Add(new Skill("Frost Blight", Constants.SkillId.A3, 3, new TurnAction(1, Constants.Target.OneEnemy, null, null, new List<DebuffToApply>() { new DebuffToApply(Constants.Debuff.PoisonSensitivity, 2, Constants.Target.OneEnemy) })));
 
             return skills;
         }

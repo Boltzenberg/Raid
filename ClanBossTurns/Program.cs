@@ -131,8 +131,8 @@ namespace ClanBossTurns
             //TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, RaidLib.Simulator.Teams.Gunga.MultiLevel.ChampionCreators(), false);
             //TestUnkillableClanBossRun(ClanBoss.Level.Brutal, RaidLib.Simulator.Teams.Gunga.MultiLevel.ChampionCreators(), false);
 
-            TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, RaidLib.Simulator.Teams.Mudd.DoubleManeater.ChampionCreators(), false);
-            //TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, RaidLib.Simulator.Teams.AllyAttackUnkillable.TeamWithKreela(), false, "SlowBoi");
+            //TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, RaidLib.Simulator.Teams.Mudd.DoubleManeater.ChampionCreators(), false);
+            TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, RaidLib.Simulator.Teams.Gunga.AllyAttackUnkillable.SlowRhazin(), false, "Painkeeper");
             Console.WriteLine();
 
             //TestUnkillableClanBossRun(ClanBoss.Level.UltraNightmare, RaidLib.Simulator.Teams.AllyAttackUnkillable.TeamWithCatacombCouncilor(), false, "SlowBoi");
@@ -241,6 +241,7 @@ namespace ClanBossTurns
             List<ClanBossBattleResult> baselineResult = baseline.Run();
             Console.WriteLine("Baseline Results:");
             ClanBossBattleResultsAnalysis.PrintSummary(baselineResult, Utils.FindSlowestChampion(champions), CBBRA.None);
+            ClanBossBattleResultsAnalysis.PrintFrozenBansheeA1WithPoisonSensitivityOn(baselineResult);
 
             if (startupSequenceSearch)
             {
