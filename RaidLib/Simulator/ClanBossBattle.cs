@@ -61,9 +61,9 @@ namespace RaidLib.Simulator
 
         public StunTargetExtractor GetStunTarget { get; set; }
 
-        public ClanBossBattle(ClanBoss.Level level, List<ChampionInBattle> championsInBattle)
+        public ClanBossBattle(ClanBoss.Level level, bool greenAffinity, List<ChampionInBattle> championsInBattle)
         {
-            ClanBossInBattle clanBoss = new ClanBossInBattle(ClanBoss.Get(level));
+            ClanBossInBattle clanBoss = new ClanBossInBattle(ClanBoss.Get(level, greenAffinity));
             this.initialState = new CBBState(new List<ChampionInBattle>(championsInBattle), clanBoss);
             this.GetStunTarget = FindSlowBoi;
         }
@@ -196,6 +196,20 @@ namespace RaidLib.Simulator
                                     if (champ.TurnCount > LastKillableTurn && !bp.ActiveBuffs.ContainsKey(Constants.Buff.Unkillable))
                                     {
                                         enqueueNewState = !failOnKill;
+                                    }
+                                }
+
+                                if (action.DebuffsToApply != null)
+                                {
+                                    foreach (DebuffToApply debuff in action.DebuffsToApply)
+                                    {
+                                        if (debuff.Target == Constants.Target.AllEnemies)
+                                        {
+                                            foreach (IBattleParticipant bp in state.BattleParticipants.Where(p => !p.IsClanBoss))
+                                            {
+                                                bp.ApplyDebuff(debuff);
+                                            }
+                                        }
                                     }
                                 }
                             }

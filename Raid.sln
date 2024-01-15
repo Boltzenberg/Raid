@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30503.244
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClanBossTurns", "ClanBossTurns\ClanBossTurns.csproj", "{72AB773E-0293-4027-8822-22FA4BDDAA70}"
 EndProject
@@ -10,6 +10,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpeedCalculator", "SpeedCalculator\SpeedCalculator.csproj", "{84194DD7-6AC6-46E9-B9AE-A68D5AC4423D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaidLibTests", "RaidLibTests\RaidLibTests.csproj", "{1DC20FA1-00E3-4352-BF25-98C2F93733F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaidBattleSimulator", "RaidBattleSimulator\RaidBattleSimulator.csproj", "{5FAC07F5-86FA-4670-A37D-95CC91A6362E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scratch", "Scratch\Scratch.csproj", "{1AE43F03-E196-4508-A6C9-95258F4B0987}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{1DC20FA1-00E3-4352-BF25-98C2F93733F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DC20FA1-00E3-4352-BF25-98C2F93733F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DC20FA1-00E3-4352-BF25-98C2F93733F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FAC07F5-86FA-4670-A37D-95CC91A6362E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FAC07F5-86FA-4670-A37D-95CC91A6362E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FAC07F5-86FA-4670-A37D-95CC91A6362E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FAC07F5-86FA-4670-A37D-95CC91A6362E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AE43F03-E196-4508-A6C9-95258F4B0987}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AE43F03-E196-4508-A6C9-95258F4B0987}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AE43F03-E196-4508-A6C9-95258F4B0987}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AE43F03-E196-4508-A6C9-95258F4B0987}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

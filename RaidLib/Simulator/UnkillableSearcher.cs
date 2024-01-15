@@ -63,7 +63,7 @@ namespace RaidLib.Simulator
                     champions.Add(new ChampionInBattle(champ, policies.Item1, policies.Item2));
                 }
 
-                ClanBossBattle battle = new ClanBossBattle(level, champions);
+                ClanBossBattle battle = new ClanBossBattle(level, false, champions);
                 List<ClanBossBattleResult> results = battle.Run();
                 int lastKillableTurn = ClanBossBattleResultsAnalysis.LastClanBossTurnThatHitKillableChampion(results, Utils.FindSlowestChampion(cs));
                 if (lastKillableTurn < 10)

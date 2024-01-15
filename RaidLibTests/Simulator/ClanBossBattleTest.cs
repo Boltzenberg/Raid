@@ -83,7 +83,7 @@ namespace RaidLibTests.Simulator
                 // 40
             };
 
-            ClanBossBattle battle = new ClanBossBattle(ClanBoss.Level.Brutal, GetChampions());
+            ClanBossBattle battle = new ClanBossBattle(ClanBoss.Level.Brutal, false, GetChampions());
             List<ClanBossBattleResult> results = battle.Run();
             List<ClanBossBattleResult> actual = results.Where(r => !string.IsNullOrEmpty(r.AttackDetails.ActorName)).ToList();
 
@@ -150,7 +150,7 @@ namespace RaidLibTests.Simulator
                 // 40
             };
 
-            ClanBossBattle battle = new ClanBossBattle(ClanBoss.Level.Nightmare, GetChampions());
+            ClanBossBattle battle = new ClanBossBattle(ClanBoss.Level.Nightmare, false, GetChampions());
             List<ClanBossBattleResult> results = battle.Run();
             List<ClanBossBattleResult> actual = results.Where(r => !string.IsNullOrEmpty(r.AttackDetails.ActorName)).ToList();
 
