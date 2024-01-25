@@ -42,9 +42,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Battle.cs" />
-    <Compile Include="ChampionBase.cs" />
+    <Compile Include="DataModel\BuffToApply.cs" />
+    <Compile Include="DataModel\Champions\ChampionBase.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="DataModel\Champions\DemonLord.cs" />
+    <Compile Include="DataModel\Champions\Dracomorph.cs" />
+    <Compile Include="DataModel\Champions\Maneater.cs" />
+    <Compile Include="DataModel\Champions\Seeker.cs" />
+    <Compile Include="DataModel\Champions\Painkeeper.cs" />
+    <Compile Include="DataModel\DebuffToApply.cs" />
+    <Compile Include="DataModel\EffectToApply.cs" />
+    <Compile Include="DataModel\Skill.cs" />
+    <Compile Include="DataModel\TurnAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TurnResult.cs" />
     <Compile Include="TickResult.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RaidBattleSimulator.DataModel;
+using RaidBattleSimulator.DataModel.Champions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,7 +31,7 @@ namespace RaidBattleSimulator
             }
         }
 
-        private IEnumerable<ChampionBase> AllChampions
+        public IEnumerable<ChampionBase> AllChampions
         {
             get
             {
@@ -37,8 +39,27 @@ namespace RaidBattleSimulator
             }
         }
 
+        public Dictionary<ChampionBase, double> GetCurrentTurnMeters()
+        {
+            return new Dictionary<ChampionBase, double>(this.championToCurrenTurnMeter);
+        }
+
+        public void UpdateTurnMeter(ChampionBase champ, double tmUpdate)
+        {
+            this.championToCurrenTurnMeter[champ] += tmUpdate;
+        }
+
         public TickResult Tick()
         {
+            Dictionary<ChampionBase, double> turnMetersBeforeTick = this.GetCurrentTurnMeters();
+
+            foreach (var champion in this.AllChampions)
+            {
+                this.championToCurrenTurnMeter[champion] += champion.GetTurnMeterDeltaForTick(1.0d);
+            }
+
+            Dictionary<ChampionBase, double> turnMetersAfterTick = this.GetCurrentTurnMeters();
+
             ChampionBase championWithMaxTurnMeter = this.Team.First();
             foreach (var champion in this.Team)
             {
@@ -57,21 +78,23 @@ namespace RaidBattleSimulator
             }
 
             ChampionBase championThatTookATurn = null;
+            List<TurnResult> turnResults = null;
+            
             if (this.championToCurrenTurnMeter[championWithMaxTurnMeter] >= 1.0d)
             {
                 championThatTookATurn = championWithMaxTurnMeter;
-                this.championToCurrenTurnMeter[championThatTookATurn] = championThatTookATurn.GetTurnMeterDeltaForTick(1.0d, 0.0d);
-            }
 
-            foreach (var champion in this.AllChampions)
-            {
-                if (champion != championThatTookATurn)
+                TurnResult turnResult = null;
+                turnResults = new List<TurnResult>();
+                do
                 {
-                    this.championToCurrenTurnMeter[champion] += champion.GetTurnMeterDeltaForTick(1.0d, 0.0d);
-                }
+                    turnResult = championThatTookATurn.TakeTurn(this);
+                    this.championToCurrenTurnMeter[championThatTookATurn] = 0.0d;
+                    turnResults.Add(turnResult);
+                } while (turnResult.GrantedExtraTurn);
             }
 
-            return new TickResult(championThatTookATurn, this.championToCurrenTurnMeter);
+            return new TickResult(turnMetersBeforeTick, turnMetersAfterTick, championThatTookATurn, turnResults);
         }
     }
 }
