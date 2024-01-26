@@ -33,12 +33,25 @@ namespace ScratchUI
             this.battle = new Battle(team, enemies);
         }
 
+        private string GetAllChampionsTable()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("<TABLE BORDER=1><TR><TH>Champion</TH><TH>Buffs</TH><TH>Debuffs</TH></TR>");
+            foreach (ChampionBase champ in this.battle.AllChampions)
+            {
+                sb.AppendFormat("<TR><TD>{0}</TD><TD>{1}</TD><TD>{2}</TD></TR>", champ.Name, String.Join(", ", champ.GetActiveBuffs), String.Join(", ", champ.GetActiveDebuffs));
+                sb.AppendLine();
+            }
+            sb.AppendLine("</TABLE>");
+            return sb.ToString();
+        }
+
         private void OnLoad(object sender, EventArgs e)
         {
             StringBuilder sb = new StringBuilder();
             StringBuilder sbJustTurns = new StringBuilder();
             sb.Append("<HTML><BODY><TABLE BORDER=1><TR><TH>Note</TH>");
-            sbJustTurns.Append("<TABLE BORDER=1><TR><TH>Note</TH><TH>Champion</TH></TR>");
+            sbJustTurns.Append("<TABLE BORDER=1><TR><TH>Note</TH><TH>Champion that took a turn</TH><TH>Skill used</TH><TH>Champion Buff Table</TH></TR>");
 
             foreach (ChampionBase champ in this.battle.AllChampions)
             {
@@ -65,9 +78,11 @@ namespace ScratchUI
                 sb.AppendLine("</TR>");
                 if (result.ChampionThatTookATurn != null)
                 {
+                    bool wasClanBossTurn = (result.ChampionThatTookATurn == battle.Enemies.First());
+
                     foreach (TurnResult turnResult in result.TurnResults)
                     {
-                        sbJustTurns.AppendFormat("<TR><TD>CB Turn {0}</TD><TD>{1} {2}</TD></TR>", clanBossTurn, result.ChampionThatTookATurn.Name, turnResult.SkillUsed);
+                        sbJustTurns.AppendFormat("<TR{0}><TD>CB Turn {1}</TD><TD>{2}</TD><TD>{3}</TD><TD>{4}</TD></TR>", wasClanBossTurn ? " bgcolor='red'" : string.Empty, clanBossTurn, result.ChampionThatTookATurn.Name, turnResult.SkillUsed, this.GetAllChampionsTable());
                         sb.AppendFormat("<TR><TD>CB Turn {0}</TD>", clanBossTurn);
                         ListViewItem item = new ListViewItem();
                         foreach (ChampionBase champ in this.battle.Team)
@@ -81,7 +96,8 @@ namespace ScratchUI
                         }
                         sb.AppendLine("</TR>");
                     }
-                    if (result.ChampionThatTookATurn == battle.Enemies.First())
+
+                    if (wasClanBossTurn)
                     {
                         clanBossTurn++;
                     }

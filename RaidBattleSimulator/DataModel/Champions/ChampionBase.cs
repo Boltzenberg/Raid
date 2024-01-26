@@ -16,6 +16,10 @@ namespace RaidBattleSimulator.DataModel.Champions
 
         private Dictionary<Constants.SkillId, int> skillCooldowns = new Dictionary<Constants.SkillId, int>();
 
+        private Dictionary<Constants.Buff, int> activeBuffs = new Dictionary<Constants.Buff, int>();
+
+        private Dictionary<Constants.Debuff, int> activeDebuffs = new Dictionary<Constants.Debuff, int>();
+
         private int turnCount = 0;
 
         public ChampionBase(string name, int baseSpeed, int uiSpeed, int speedSets, int perceptionSets, double speedAuraPercentage, List<Skill> skills)
@@ -56,7 +60,29 @@ namespace RaidBattleSimulator.DataModel.Champions
             return result;
         }
 
-        public void ReduceSkillCooldowns(int reduction)
+        public IEnumerable<Constants.Buff> GetActiveBuffs
+        {
+            get
+            {
+                foreach (Constants.Buff buff in this.activeBuffs.Keys)
+                {
+                    yield return buff;
+                }
+            }
+        }
+
+        public IEnumerable<Constants.Debuff> GetActiveDebuffs
+        {
+            get
+            {
+                foreach (Constants.Debuff debuff in this.activeDebuffs.Keys)
+                {
+                    yield return debuff;
+                }
+            }
+        }
+
+        protected void ReduceSkillCooldowns(int reduction)
         {
             foreach (Constants.SkillId skillId in this.Skills.Keys)
             {
@@ -64,8 +90,54 @@ namespace RaidBattleSimulator.DataModel.Champions
             }
         }
 
+        protected void AddBuff(BuffToApply buff)
+        {
+            // Extend existing buff
+            if (this.activeBuffs.ContainsKey(buff.Buff) && Constants.BuffTraits.IsSingleton(buff.Buff))
+            {
+                if (this.activeBuffs[buff.Buff] < buff.Duration)
+                {
+                    this.activeBuffs[buff.Buff] = buff.Duration;
+                }
+            }
+            // Apply a new buff
+            else if (this.activeBuffs.Count < Constants.BuffTraits.MaxBuffs)
+            {
+                this.activeBuffs[buff.Buff] = buff.Duration;
+            }
+        }
+
+        protected void AddDebuff(DebuffToApply debuff)
+        {
+            if (this.activeBuffs.ContainsKey(Constants.Buff.BlockDebuffs))
+            {
+                // debuff blocked!
+                return;
+            }
+
+            // extend existing debuff
+            if (this.activeDebuffs.ContainsKey(debuff.Debuff) && Constants.DebuffTraits.IsSingleton(debuff.Debuff))
+            {
+                if (this.activeDebuffs[debuff.Debuff] < debuff.Duration)
+                {
+                    this.activeDebuffs[debuff.Debuff] = debuff.Duration;
+                }
+            }
+            // Apply a new debuff
+            else if (this.activeDebuffs.Count < Constants.DebuffTraits.MaxDebuffs)
+            {
+                this.activeDebuffs[debuff.Debuff] = debuff.Duration;
+            }
+        }
+
         protected virtual Skill GetNextSkillToUse()
         {
+            // If the champ is stunned, just recover
+            if (this.activeDebuffs.ContainsKey(Constants.Debuff.Stun))
+            {
+                return Skill.StunRecovery;
+            }
+
             List<Constants.SkillId> skillIdsToCheck = new List<Constants.SkillId>() { Constants.SkillId.A4, Constants.SkillId.A3, Constants.SkillId.A2, Constants.SkillId.A1 };
 
             foreach (Constants.SkillId skillId in skillIdsToCheck)
@@ -82,10 +154,10 @@ namespace RaidBattleSimulator.DataModel.Champions
             return this.Skills[Constants.SkillId.A1];
         }
 
-        private void ApplyEffect(EffectToApply effect, Battle battle)
+        private List<ChampionBase> GetImpactedChampions(Constants.Target target, Battle battle)
         {
             List<ChampionBase> championsImpacted = new List<ChampionBase>();
-            switch (effect.Target)
+            switch (target)
             {
                 case Constants.Target.Self:
                     championsImpacted.Add(this);
@@ -96,9 +168,25 @@ namespace RaidBattleSimulator.DataModel.Champions
                 case Constants.Target.FullTeam:
                     championsImpacted.AddRange(battle.Team);
                     break;
+                case Constants.Target.OneEnemy:
+                    if (battle.Team.Contains(this))
+                    {
+                        championsImpacted.Add(battle.Enemies.First());
+                    }
+                    else
+                    {
+                        championsImpacted.Add(battle.Team.First());
+                    }
+                    break;
                 default:
                     throw new NotSupportedException("Didn't implement that yet");
             }
+            return championsImpacted;
+        }
+
+        private void ApplyEffect(EffectToApply effect, Battle battle)
+        {
+            List<ChampionBase> championsImpacted = this.GetImpactedChampions(effect.Target, battle);
 
             switch (effect.Effect)
             {
@@ -127,6 +215,26 @@ namespace RaidBattleSimulator.DataModel.Champions
             }
         }
 
+        private void ApplyBuff(BuffToApply buff, Battle battle)
+        {
+            List<ChampionBase> championsImpacted = this.GetImpactedChampions(buff.Target, battle);
+
+            foreach (ChampionBase champ in championsImpacted)
+            {
+                champ.AddBuff(buff);
+            }
+        }
+
+        private void ApplyDebuff(DebuffToApply debuff, Battle battle)
+        {
+            List<ChampionBase> championsImpacted = this.GetImpactedChampions(debuff.Target, battle);
+
+            foreach (ChampionBase champ in championsImpacted)
+            {
+                champ.AddDebuff(debuff);
+            }
+        }
+
         public TurnResult TakeTurn(Battle battle)
         {
             bool takeExtraTurn = false;
@@ -135,15 +243,18 @@ namespace RaidBattleSimulator.DataModel.Champions
             Skill skillToUse = this.GetNextSkillToUse();
 
             // Update skill cooldowns
-            foreach (Constants.SkillId skillToSetCooldownOn in this.Skills.Keys)
+            if (skillToUse.AllowSkillCooldowns)
             {
-                if (skillToSetCooldownOn == skillToUse.Id)
+                foreach (Constants.SkillId skillToSetCooldownOn in this.Skills.Keys)
                 {
-                    this.skillCooldowns[skillToUse.Id] = skillToUse.Cooldown - 1;
-                }
-                else
-                {
-                    this.skillCooldowns[skillToSetCooldownOn] = Math.Max(0, this.skillCooldowns[skillToSetCooldownOn] - 1);
+                    if (skillToSetCooldownOn == skillToUse.Id)
+                    {
+                        this.skillCooldowns[skillToUse.Id] = skillToUse.Cooldown - 1;
+                    }
+                    else
+                    {
+                        this.skillCooldowns[skillToSetCooldownOn] = Math.Max(0, this.skillCooldowns[skillToSetCooldownOn] - 1);
+                    }
                 }
             }
 
@@ -160,6 +271,41 @@ namespace RaidBattleSimulator.DataModel.Champions
                     {
                         takeExtraTurn = true;
                     }
+                }
+            }
+
+            // Update the durations of all buffs and debuffs
+            foreach (Constants.Buff buff in new List<Constants.Buff>(this.activeBuffs.Keys))
+            {
+                this.activeBuffs[buff]--;
+                if (this.activeBuffs[buff] == 0)
+                {
+                    this.activeBuffs.Remove(buff);
+                }
+            }
+
+            foreach (Constants.Debuff debuff in new List<Constants.Debuff>(this.activeDebuffs.Keys))
+            {
+                this.activeDebuffs[debuff]--;
+                if (this.activeDebuffs[debuff] == 0)
+                {
+                    this.activeDebuffs.Remove(debuff);
+                }
+            }
+
+            if (action.BuffsToApply != null)
+            {
+                foreach (BuffToApply buff in action.BuffsToApply)
+                {
+                    this.ApplyBuff(buff, battle);
+                }
+            }
+
+            if (action.DebuffsToApply != null)
+            {
+                foreach (DebuffToApply debuff in action.DebuffsToApply)
+                {
+                    this.ApplyDebuff(debuff, battle);
                 }
             }
 

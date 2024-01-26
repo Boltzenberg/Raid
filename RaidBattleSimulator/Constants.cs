@@ -36,6 +36,16 @@ namespace RaidBattleSimulator
             Unkillable,
         }
 
+        public static class BuffTraits
+        {
+            public const int MaxBuffs = 10;
+
+            public static bool IsSingleton(Buff buff)
+            {
+                return true;
+            }
+        }
+
         public enum Debuff
         {
             DecreaseAttack50,
@@ -47,6 +57,21 @@ namespace RaidBattleSimulator
             PoisonSensitivity,
             Stun,
             Weaken15,
+        }
+
+        public static class DebuffTraits
+        {
+            public const int MaxDebuffs = 10;
+
+            private static HashSet<Debuff> MultiInstanceDebuffs = new HashSet<Debuff>() 
+            {
+                Debuff.Poison5
+            };
+
+            public static bool IsSingleton(Debuff debuff)
+            {
+                return !MultiInstanceDebuffs.Contains(debuff);
+            }
         }
 
         public enum Target

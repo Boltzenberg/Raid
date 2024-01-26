@@ -29,6 +29,13 @@ namespace RaidBattleSimulator.DataModel
                 return this.Id == Constants.SkillId.P1;
             }
         }
+        public bool AllowSkillCooldowns
+        {
+            get
+            {
+                return this.Id != Constants.SkillId.Recovery;
+            }
+        }
 
         public static Skill StunRecovery
         {
